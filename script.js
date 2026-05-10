@@ -1,13 +1,12 @@
-let currentUser = null;
+let users = JSON.parse(localStorage.getItem("users")) || [];
 
-// Load users safely
-let users = JSON.parse(localStorage.getItem("users"));
-
-if (!users || users.length === 0) {
+if(users.length === 0){
 users = [
-{name:"Lucas_Arora", password:"admin123", role:"owner", coins:0}
+{name:"Lucas_Arora", password:"admin123", role:"owner", coins:0},
+{name:"Robert YouTuber", password:"1234", role:"owner", coins:0}
 ];
-save();
+function save(){
+localStorage.setItem("users", JSON.stringify(users));
 }
 
 // ✅ FIXED SAVE FUNCTION
