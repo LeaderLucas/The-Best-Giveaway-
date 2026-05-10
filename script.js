@@ -1,15 +1,17 @@
+let currentUser = null;
+
+// SAFE INIT USERS
 let users = JSON.parse(localStorage.getItem("users")) || [];
 
 if(users.length === 0){
 users = [
 {name:"Lucas_Arora", password:"admin123", role:"owner", coins:0},
-{name:"Robert YouTuber", password:"1234", role:"owner", coins:0}
+{name:"Robert YouTuber", password:"1234", role:"subscriber", coins:0}
 ];
-function save(){
-localStorage.setItem("users", JSON.stringify(users));
+save();
 }
 
-// ✅ FIXED SAVE FUNCTION
+// SAVE FUNCTION
 function save(){
 localStorage.setItem("users", JSON.stringify(users));
 }
@@ -59,25 +61,36 @@ updateUI();
 
 // UPDATE UI
 function updateUI(){
+
 let user = users.find(x => x.name === currentUser.name);
+
+// FIX: safe fallback
+if(!user) return;
 
 document.getElementById("coins").innerText = user.coins;
 
-// ✅ FIRST reset (IMPORTANT)
+// reset admin panel
 document.getElementById("adminPanel").classList.add("hidden");
 
-// ONLY owner can see admin panel
+// only owner sees admin panel
 if(user.role === "owner"){
 document.getElementById("adminPanel").classList.remove("hidden");
 }
 }
-// COIN BUTTON (placeholder)
+
+// EARN MONEY BUTTON
 function earnMoney(){
 alert("Coming Soon 🚀");
 }
 
-// ADD COINS (ADMIN)
+// ADD COINS (OWNER ONLY)
 function addCoins(){
+
+if(!currentUser || currentUser.role !== "owner"){
+alert("Access Denied ❌ Only owner can add coins");
+return;
+}
+
 let target = prompt("Username?");
 let amount = parseInt(prompt("Coins?"));
 
@@ -90,18 +103,7 @@ updateUI();
 }
 }
 
-// VIEW USERS
-function viewUsers(){
-let text = "";
-
-users.forEach((u, i) => {
-text += (i+1) + ". " + u.name + " | " + u.role + " | Coins: " + u.coins + "\n";
-});
-
-alert(text);
-}
-
-
+// MAKE ADMIN (OWNER ONLY)
 function makeAdmin(){
 
 if(!currentUser || currentUser.role !== "owner"){
@@ -109,7 +111,7 @@ alert("Access Denied ❌ Only owner can give admin role");
 return;
 }
 
-let target = prompt("Username ko admin banana hai?");
+let target = prompt("Username?");
 
 let user = users.find(x => x.name === target);
 
@@ -124,16 +126,24 @@ save();
 alert(target + " is now ADMIN 👑");
 }
 
-function showDatabase(){
+// MAKE OWNER (optional for Robert fix)
+function makeOwner(name){
 
 if(!currentUser || currentUser.role !== "owner"){
-alert("Access Denied ❌ Only owner can view database");
+alert("Access Denied ❌");
 return;
 }
 
-alert(JSON.stringify(users, null, 2));
+let user = users.find(x => x.name === name);
+
+if(user){
+user.role = "owner";
+save();
+alert(name + " is now OWNER 👑");
+}
 }
 
+// VIEW USERS TABLE (OWNER ONLY)
 function viewUsers(){
 
 if(!currentUser || currentUser.role !== "owner"){
@@ -157,27 +167,41 @@ table.innerHTML += `
 
 document.getElementById("userTableBox").classList.remove("hidden");
 }
+
+// CLOSE TABLE
 function closeTable(){
 document.getElementById("userTableBox").classList.add("hidden");
 }
+
+// DATABASE RAW (OWNER ONLY)
+function showDatabase(){
+
+if(!currentUser || currentUser.role !== "owner"){
+alert("Access Denied ❌ Only owner can view database");
+return;
+}
+
+alert(JSON.stringify(users, null, 2));
+}
+
+// LOGOUT (ALL USERS)
 function logout(){
 
-// clear current session
 currentUser = null;
 localStorage.removeItem("currentUser");
 
-// UI reset
 document.getElementById("dashboard").classList.add("hidden");
 document.getElementById("loginPage").classList.remove("hidden");
 
-// optional: clear inputs
 document.getElementById("username").value = "";
 document.getElementById("password").value = "";
 
 alert("Logged out successfully 🚪");
 }
+
 // AUTO LOGIN
-window.onload = function(){ 
+window.onload = function(){
+
 let saved = localStorage.getItem("currentUser");
 
 if(saved){
@@ -189,4 +213,3 @@ showDashboard();
 }
 }
 }
-
