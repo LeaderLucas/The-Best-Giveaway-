@@ -161,6 +161,22 @@ document.getElementById("userTableBox").classList.remove("hidden");
 function closeTable(){
 document.getElementById("userTableBox").classList.add("hidden");
 }
+function logout(){
+
+// clear current session
+currentUser = null;
+localStorage.removeItem("currentUser");
+
+// UI reset
+document.getElementById("dashboard").classList.add("hidden");
+document.getElementById("loginPage").classList.remove("hidden");
+
+// optional: clear inputs
+document.getElementById("username").value = "";
+document.getElementById("password").value = "";
+
+alert("Logged out successfully 🚪");
+}
 // AUTO LOGIN
 window.onload = function(){ 
 let saved = localStorage.getItem("currentUser");
