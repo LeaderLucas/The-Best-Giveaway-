@@ -616,13 +616,12 @@ hideAllPages();
 document.getElementById("newSubscriberPage")
 .classList.remove("hidden");
 
-// ✅ ALWAYS GET LATEST DATA
+// 🔥 ALWAYS GET LATEST DATA
 subscribeRequests = JSON.parse(
 localStorage.getItem("subscribeRequests")
 ) || [];
 
-let box =
-document.getElementById("subscriberList");
+subscribeRequests.forEach((s,i)=>{
 
 box.innerHTML = "";
 
