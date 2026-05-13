@@ -1,68 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>YT Login System</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Advanced Subscriber System</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <!-- LOGIN PAGE -->
 <div id="loginPage" class="container">
-<h2>Login / Signup</h2>
-<input id="username" placeholder="Username" />
-<input id="password" type="password" placeholder="Password" />
+
+<h1 class="title">SUBSCRIBER EVENT</h1>
+
+<input type="text" id="username" placeholder="Enter Username">
+<input type="text" id="password" placeholder="Enter Password">
+
 <button onclick="signup()">Signup</button>
 <button onclick="login()">Login</button>
+
 </div>
+
 
 <!-- DASHBOARD -->
-<div id="dashboard" class="hidden">
-
-<div class="nav">
-<div id="userInfo"></div>
-<div id="roleInfo"></div>
-</div>
-
-<div class="container">
+<div id="dashboard" class="container hidden">
 
 <div class="card">
-<h3>Dashboard</h3>
-<p>Coins: <span id="coins">0</span></p>
-<button onclick="earnMoney()">Earn Money 💰</button>
+
+<h2>Dashboard</h2>
+
+<p id="userInfo"></p>
+<p id="roleInfo"></p>
+
+<p>
+Coins: <span id="coins">0</span>
+</p>
+
 </div>
 
+
+<!-- STATUS -->
+<div id="statusBox" class="card">
+
+<h2>Status 📊</h2>
+<button onclick="statusFeature()">Check Status</button>
+
+</div>
+
+
+<!-- EARN -->
+<div id="earnBox" class="card">
+
+<h2>Earn Money 💰</h2>
+<button onclick="openEarnPage()">Open Earn Page</button>
+
+</div>
+
+
+<!-- SUBSCRIBE -->
+<div id="subscribeBox" class="card">
+
+<h2>Subscribe Verification ✅</h2>
+<button onclick="openSubscribePage()">Verify Subscribe</button>
+
+</div>
+
+
+<!-- WITHDRAW -->
+<div id="withdrawBox" class="card">
+
+<h2>Withdraw 💸</h2>
+<button onclick="openWithdrawPage()">Withdraw Coins</button>
+
+</div>
+
+
+<!-- ADMIN PANEL -->
 <div id="adminPanel" class="card hidden">
-<h3>Admin Panel</h3>
-<button onclick="showDatabase()">Database 📦</button>
+
+<h2>Admin Panel 👑</h2>
+
+<button onclick="openMembersPage()">Subscriber Count 👥</button>
+<button onclick="openNewSubscriberPage()">New Subscribers 🆕</button>
+<button onclick="openWithdrawRequests()">Withdrawal Requests 💸</button>
 <button onclick="makeAdmin()">Make Admin 👑</button>
-<button onclick="addCoins()">Add Coins</button>
-<button onclick="viewUsers()">View Users</button>
+<button onclick="addCoins()">Add Coins 💰</button>
 
 </div>
-<div id="userTableBox" class="hidden card">
-<h3>Users Database 📊</h3>
 
-<table border="1" width="100%" style="color:white; text-align:center;">
+</div>
+
+
+<!-- EARN PAGE -->
+<div id="earnPage" class="container hidden">
+
+<div class="card">
+
+<h1>Earn Coins 💰</h1>
+
+<div id="uploadBox" style="display:none;">
+
+<input type="text" id="videoLink" placeholder="YouTube Video Link">
+<input type="number" id="videoReward" placeholder="Reward Coins">
+
+<button onclick="uploadVideo()">Upload Video 📤</button>
+
+</div>
+
+<div id="videoArea"></div>
+
+<button onclick="backDashboard()">Close</button>
+
+</div>
+
+</div>
+
+
+<!-- SUBSCRIBE PAGE -->
+<div id="subscribePage" class="container hidden">
+
+<div class="card">
+
+<h1>Subscribe Verification</h1>
+
+<p>Subscribe our YouTube channel and get 50,000 coins 💰</p>
+
+<input type="text" id="gameName" placeholder="In Game Name">
+<input type="text" id="gameNumber" placeholder="Game Number">
+<input type="file" id="proofImage" accept="image/*">
+
+<button onclick="submitVerification()">Submit Verification</button>
+<button onclick="backDashboard()">Close</button>
+
+</div>
+
+</div>
+
+
+<!-- MEMBERS PAGE -->
+<div id="membersPage" class="container hidden">
+
+<div class="card">
+
+<h1>Subscriber Count 👥</h1>
+
+<p>Total Subscribers: <span id="subscriberCount">0</span></p>
+
+<table>
+
 <thead>
 <tr>
 <th>S.No</th>
-<th>Username</th>
+<th>Name</th>
 <th>Role</th>
 <th>Coins</th>
 </tr>
 </thead>
 
-<tbody id="userTableBody"></tbody>
+<tbody id="membersTable"></tbody>
+
 </table>
 
-<button onclick="closeTable()">Close ❌</button>
-</div>
-<button onclick="logout()">Logout 🚪</button>
-</div>
+<button onclick="backDashboard()">Close</button>
+
 </div>
 
+</div>
+
+
+<!-- NEW SUBSCRIBERS -->
+<div id="newSubscriberPage" class="container hidden">
+
+<div class="card">
+
+<h1>New Subscribers 🆕</h1>
+
+<div id="subscriberList"></div>
+
+<button onclick="backDashboard()">Close</button>
+
+</div>
+
+</div>
+
+
+<!-- WITHDRAW PAGE -->
+<div id="withdrawPage" class="container hidden">
+
+<div class="card">
+
+<h1>Withdraw Request 💸</h1>
+
+<input type="text" id="withdrawNumber" placeholder="Game Number">
+<select id="withdrawAmount">
+
+<option value="30000">30000 Coins</option>
+<option value="50000">50000 Coins</option>
+<option value="75000">75000 Coins</option>
+<option value="100000">100000 Coins</option>
+
+</select>
+<button onclick="submitWithdraw()">Submit Withdraw</button>
+<button onclick="backDashboard()">Close</button>
+
+</div>
+
+</div>
+
+
+<!-- WITHDRAW REQUEST PAGE -->
+<div id="withdrawRequestPage" class="container hidden">
+
+<div class="card">
+
+<h1>Withdrawal Requests 💸</h1>
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Amount</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="withdrawTable"></tbody>
+
+</table>
+
+<button onclick="backDashboard()">Close</button>
+
+</div>
+
+</div>
+
+<button onclick="logout()" style="background:red;color:white;">
+Logout 🚪
+</button>
 <script src="script.js"></script>
+
 </body>
 </html>
