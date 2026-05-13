@@ -489,12 +489,26 @@ document.getElementById("gameNumber").value;
 let file =
 document.getElementById("proofImage").files[0];
 
+// ✅ EMPTY CHECK
 if(!name || !number || !file){
 
 alert("Fill all fields");
 return;
 
 }
+
+// ✅ 6 DIGIT CHECK
+if(!/^\d{6}$/.test(number)){
+
+alert("Game Number must be exactly 6 digits ❌");
+return;
+
+}
+
+// ✅ REFRESH LATEST DATA
+subscribeRequests = JSON.parse(
+localStorage.getItem("subscribeRequests")
+) || [];
 
 // CHECK EXISTING REQUEST
 let alreadyApplied =
@@ -535,22 +549,19 @@ reader.onload = function(e){
 
 subscribeRequests.push({
 
-user:currentUser.name,
-game:name,
-number:number,
-image:e.target.result
+user: currentUser.name,
+game: name,
+number: number,
+image: e.target.result
 
 });
 
 localStorage.setItem(
-
 "subscribeRequests",
-
 JSON.stringify(subscribeRequests)
-
 );
 
-// DISCORD WEBHOOK
+// 🔥 DISCORD WEBHOOK
 fetch(
 "https://discord.com/api/webhooks/1503773951325638716/zeBKmrRqWRfaSZBFC07__bZ_hqOsnFqSgyd_zigjklRT4ebCsmq8jhGP5ZbYrcoD6oNX",
 {
@@ -567,15 +578,25 @@ content:
 "🆕 NEW SUBSCRIBER REQUEST\n\n" +
 "User: " + currentUser.name + "\n" +
 "Game Name: " + name + "\n" +
-"Number: " + number
+"Game Number: " + number + "\n" +
+"Status: Pending ⏳"
 
 })
 
 });
 
+// ✅ SUCCESS
 alert(
 "Application Submitted ✅"
 );
+
+// 🔥 AUTO REFRESH ADMIN PAGE
+if(
+document.getElementById("newSubscriberPage")
+.classList.contains("hidden") === false
+){
+openNewSubscriberPage();
+}
 
 backDashboard();
 
@@ -584,6 +605,9 @@ backDashboard();
 reader.readAsDataURL(file);
 
 }
+
+
+
 // NEW SUBSCRIBERS PAGE
 function openNewSubscriberPage(){
 
@@ -592,10 +616,26 @@ hideAllPages();
 document.getElementById("newSubscriberPage")
 .classList.remove("hidden");
 
+// ✅ ALWAYS GET LATEST DATA
+subscribeRequests = JSON.parse(
+localStorage.getItem("subscribeRequests")
+) || [];
+
 let box =
 document.getElementById("subscriberList");
 
 box.innerHTML = "";
+
+// ✅ EMPTY MESSAGE
+if(subscribeRequests.length === 0){
+
+box.innerHTML = `
+<h3>No New Subscribers 📭</h3>
+`;
+
+return;
+
+}
 
 subscribeRequests.forEach((s,i)=>{
 
@@ -622,6 +662,7 @@ src="${s.image}"
 style="
 width:100%;
 border-radius:10px;
+margin-top:10px;
 ">
 
 <button
@@ -639,32 +680,58 @@ Approve ✅
 
 }
 
+
+
 // APPROVE SUBSCRIBER
 function approveSubscriber(index){
 
+// ✅ REFRESH LATEST DATA
+subscribeRequests = JSON.parse(
+localStorage.getItem("subscribeRequests")
+) || [];
+
 let s = subscribeRequests[index];
 
+if(!s){
+
+alert("Request not found ❌");
+return;
+
+}
+
 let user = users.find(
-x=>x.name===s.user
+x => x.name === s.user
 );
 
-if(!user) return;
+if(!user){
 
+alert("User not found ❌");
+return;
+
+}
+
+// ✅ ADD COINS
 user.coins += 50000;
 
 save();
 
+// ✅ APPROVED LIST
 let approvedUsers = JSON.parse(
 localStorage.getItem("subApproved")
 ) || [];
 
+if(!approvedUsers.includes(user.name)){
+
 approvedUsers.push(user.name);
+
+}
 
 localStorage.setItem(
 "subApproved",
 JSON.stringify(approvedUsers)
 );
 
+// ✅ HISTORY
 addHistory(
 
 user.name,
@@ -673,6 +740,7 @@ user.name,
 
 );
 
+// ✅ REMOVE REQUEST
 subscribeRequests.splice(index,1);
 
 localStorage.setItem(
@@ -683,14 +751,37 @@ JSON.stringify(subscribeRequests)
 
 );
 
+// 🔥 DISCORD WEBHOOK APPROVED
+fetch(
+"https://discord.com/api/webhooks/1503773951325638716/zeBKmrRqWRfaSZBFC07__bZ_hqOsnFqSgyd_zigjklRT4ebCsmq8jhGP5ZbYrcoD6oNX",
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+content:
+"✅ SUBSCRIBER APPROVED\n\n" +
+"User: " + user.name + "\n" +
+"Reward: 50,000 Coins 💰\n" +
+"Approved By: " + currentUser.name + " 👑"
+
+})
+
+});
+
 alert(
 "Approved Successfully ✅"
 );
 
+// ✅ REFRESH PAGE
 openNewSubscriberPage();
 
 }
-
 // MEMBERS PAGE
 function openMembersPage(){
 
