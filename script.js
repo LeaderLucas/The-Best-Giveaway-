@@ -1598,7 +1598,7 @@ body:JSON.stringify({
 
 content:
 
-"💸 WITHDRAWAL LOG [V3]\n\n" +
+"💸 WITHDRAWAL SUCCESSFULLY COMPLETED\n\n" +
 
 w.amount +
 
