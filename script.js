@@ -1811,3 +1811,41 @@ showDashboard();
 }
 
 }
+// ===============================
+// AUTO REFRESH DATA
+// ===============================
+
+setInterval(()=>{
+
+// RELOAD USERS
+users = JSON.parse(
+localStorage.getItem("users")
+) || [];
+
+
+// RELOAD REQUESTS
+subscribeRequests = JSON.parse(
+localStorage.getItem("subscribeRequests")
+) || [];
+
+
+// RELOAD WITHDRAWS
+withdrawRequests = JSON.parse(
+localStorage.getItem("withdrawRequests")
+) || [];
+
+
+// RELOAD VIDEOS
+videos = JSON.parse(
+localStorage.getItem("videos")
+) || [];
+
+
+// UPDATE UI
+if(currentUser){
+
+updateUI();
+
+}
+
+},2000);
