@@ -1,495 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<title>Neon Reward Website</title>
 
-<title>
-Advanced Subscriber System
-</title>
+<link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet"
-href="style.css">
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
 
 </head>
 
 <body>
 
-<!-- LOGIN PAGE -->
+<div class="main-container">
 
-<div id="loginPage"
-class="container">
+<!-- LOGIN -->
 
-<h1 class="title">
-SUBSCRIBER EVENT
-</h1>
+<div class="card" id="loginPage">
 
-<input
-type="text"
-id="username"
-placeholder="Enter Username">
+<h1 class="title">WELCOME</h1>
 
-<input
-type="password"
-id="password"
-placeholder="Enter Password">
+<input type="text" id="name" placeholder="Enter Name">
 
-<button onclick="signup()">
-Signup
-</button>
+<input type="text" id="mobile" placeholder="Mobile Number">
 
-<button onclick="login()">
-Login
-</button>
+<select id="server">
 
-</div>
+<option value="">Select Server</option>
+<option>Server 1</option>
+<option>Server 2</option>
+<option>Server 3</option>
+<option>Server 4</option>
 
+</select>
 
+<input type="password" id="password" placeholder="Password">
 
-<!-- DASHBOARD -->
-
-<div id="dashboard"
-class="container hidden">
-
-<!-- USER INFO -->
-
-<div class="card">
-
-<h2>
-Dashboard
-</h2>
-
-<p id="userInfo"></p>
-
-<p id="roleInfo"></p>
-
-<p>
-
-Coins:
-<span id="coins">
-0
-</span>
-
-</p>
-
-</div>
-
-
-
-<!-- STATUS -->
-
-<div class="card">
-
-<h2>
-Status 📊
-</h2>
-
-<button onclick="statusFeature()">
-
-Check Status
-
+<button onclick="loginUser()">
+<i class="fa-solid fa-right-to-bracket"></i>
+LOGIN
 </button>
 
 </div>
 
+<!-- PROFILE -->
 
+<div class="card hidden" id="profilePage">
 
-<!-- EARN MONEY -->
+<h1 class="title">PROFILE</h1>
 
-<div class="card">
+<div class="stats-box">
 
-<h2>
-Earn Coins 💰
-</h2>
-
-<button onclick="openEarnPage()">
-
-Open Earn Page
-
-</button>
-
+<div class="stat">
+<h3>Total Earning</h3>
+<p id="earning">0</p>
 </div>
 
-
-
-<!-- SUBSCRIBE VERIFY -->
-
-<div id="subscribeBox"
-class="card">
-
-<h2>
-Subscribe Verification ✅
-</h2>
-
-<button onclick="openSubscribePage()">
-
-Verify Subscribe
-
-</button>
-
+<div class="stat">
+<h3>Withdraw Money</h3>
+<p id="withdrawn">0</p>
 </div>
 
-
-
-<!-- WITHDRAW -->
-
-<div class="card">
-
-<h2>
-Withdraw 💸
-</h2>
-
-<button onclick="openWithdrawPage()">
-
-Withdraw Coins
-
-</button>
-
-</div>
-
-
-
-<!-- ADMIN PANEL -->
-
-<div id="adminPanel"
-class="card hidden">
-
-<h2>
-Admin Panel 👑
-</h2>
-
-<button onclick="openMembersPage()">
-
-Subscriber Count 👥
-
-</button>
-
-<button onclick="openNewSubscriberPage()">
-
-New Subscribers 🆕
-
-</button>
-
-<button onclick="openWithdrawRequests()">
-
-Withdrawal Requests 💸
-
-</button>
-
-
-
-<!-- OWNER ONLY -->
-
-<div id="ownerControls">
-
-<button onclick="makeAdmin()">
-
-Make Admin 👑
-
-</button>
-
-<button onclick="addCoins()">
-
-Add Coins 💰
-
-</button>
-
+<div class="stat">
+<h3>Current Balance</h3>
+<p id="balance">0</p>
 </div>
 
 </div>
 
-
-
-<!-- LOGOUT -->
-
-<button
-id="logoutBtn"
-onclick="logout()">
-
-Logout 🚪
-
+<button onclick="watchVideo()">
+<i class="fa-brands fa-youtube"></i>
+NEW VIDEO
 </button>
-  
-</div>
 
+<button onclick="showSection('subscribeSection')">
+<i class="fa-solid fa-circle-check"></i>
+SUBSCRIBE VERIFICATION
+</button>
 
+<button onclick="showSection('withdrawSection')">
+<i class="fa-solid fa-money-bill-wave"></i>
+WITHDRAW REQUEST
+</button>
 
-<!-- EARN PAGE -->
+<button onclick="showSection('reviewSection')">
+<i class="fa-solid fa-star"></i>
+YOUR REVIEW
+</button>
 
-<div id="earnPage"
-class="container hidden">
-
-<div class="card">
-
-<h1>
-Earn Coins 💰
-</h1>
-
-
-
-<!-- OWNER UPLOAD -->
-
-<div id="uploadBox"
-class="hidden">
-
-<input
-type="text"
-id="videoLink"
-placeholder="YouTube Video Link">
-
-<input
-type="number"
-id="videoReward"
-placeholder="Reward Coins">
-
-<button onclick="uploadVideo()">
-
-Upload Video 📤
-
+<button onclick="logout()">
+<i class="fa-solid fa-right-from-bracket"></i>
+LOGOUT
 </button>
 
 </div>
 
+<!-- SUBSCRIBE -->
 
+<div class="card hidden section" id="subscribeSection">
 
-<!-- VIDEOS -->
+<h1 class="title">SUBSCRIBE VERIFICATION</h1>
 
-<div id="videoArea"></div>
+<input type="text" id="subName" readonly>
 
-<button onclick="backDashboard()">
-
-Close
-
-</button>
-
-</div>
-
-</div>
-
-
-
-<!-- SUBSCRIBE PAGE -->
-
-<div id="subscribePage"
-class="container hidden">
-
-<div class="card">
-
-<h1>
-Subscribe Verification
-</h1>
-
-<input
-type="text"
-id="gameName"
-placeholder="In Game Name">
+<input type="text" id="subServer" readonly>
 
 <input
 type="text"
 id="gameNumber"
-placeholder="Game Number">
+placeholder="Enter 6 Digit Game Number"
+>
 
 <input
-type="file"
-id="proofImage"
-accept="image/*">
+type="text"
+id="proofLink"
+placeholder="Paste Screenshot Link"
+>
 
-<button onclick="submitVerification()">
-
-Submit Verification
-
+<button onclick="submitSubscribe()">
+SUBMIT
 </button>
 
-<button onclick="backDashboard()">
-
-Close
-
+<button onclick="backProfile()">
+BACK
 </button>
 
 </div>
 
-</div>
+<!-- WITHDRAW -->
 
+<div class="card hidden section" id="withdrawSection">
 
+<h1 class="title">WITHDRAW REQUEST</h1>
 
-<!-- MEMBERS PAGE -->
+<input type="text" id="withName" readonly>
 
-<div id="membersPage"
-class="container hidden">
-
-<div class="card">
-
-<h1>
-Subscriber Count 👥
-</h1>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-S.No
-</th>
-
-<th>
-Name
-</th>
-
-<th>
-Role
-</th>
-
-<th>
-Coins
-</th>
-
-</tr>
-
-</thead>
-
-<tbody id="membersTable">
-
-</tbody>
-
-</table>
-
-<button onclick="backDashboard()">
-
-Close
-
-</button>
-
-</div>
-
-</div>
-
-
-
-<!-- NEW SUBSCRIBERS -->
-
-<div id="newSubscriberPage"
-class="container hidden">
-
-<div class="card">
-
-<h1>
-New Subscribers 🆕
-</h1>
-
-<div id="subscriberList">
-
-</div>
-
-<button onclick="backDashboard()">
-
-Close
-
-</button>
-
-</div>
-
-</div>
-
-
-
-<!-- WITHDRAW PAGE -->
-
-<div id="withdrawPage"
-class="container hidden">
-
-<div class="card">
-
-<h1>
-Withdraw Request 💸
-</h1>
+<input type="text" id="withServer" readonly>
 
 <input
 type="text"
 id="withdrawNumber"
-placeholder="Game Number">
+placeholder="Enter 6 Digit Game Number"
+>
 
-<input
-type="number"
-id="withdrawAmount"
-placeholder="Withdraw Amount">
+<select id="withdrawAmount">
+
+<option value="">Select Amount</option>
+
+<option value="30000">30000</option>
+<option value="50000">50000</option>
+<option value="80000">80000</option>
+<option value="100000">100000</option>
+<option value="150000">1500000</option>
+
+</select>
 
 <button onclick="submitWithdraw()">
-
-Submit Withdraw
-
+SUBMIT
 </button>
 
-<button onclick="backDashboard()">
-
-Close
-
+<button onclick="backProfile()">
+BACK
 </button>
 
 </div>
 
-</div>
+<!-- REVIEW -->
 
+<div class="card hidden section" id="reviewSection">
 
+<h1 class="title">YOUR REVIEW</h1>
 
-<!-- WITHDRAW REQUEST PAGE -->
+<input type="text" id="reviewName" readonly>
 
-<div id="withdrawRequestPage"
-class="container hidden">
+<textarea
+id="reviewText"
+placeholder="Write Review"
+></textarea>
 
-<div class="card">
+<input
+type="text"
+id="reviewImage"
+placeholder="Paste Payment Screenshot Link"
+>
 
-<h1>
-Withdrawal Requests 💸
-</h1>
+<button onclick="submitReview()">
+SUBMIT REVIEW
+</button>
 
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Name
-</th>
-
-<th>
-Number
-</th>
-
-<th>
-Amount
-</th>
-
-<th>
-Status
-</th>
-
-</tr>
-
-</thead>
-
-<tbody id="withdrawTable">
-
-</tbody>
-
-</table>
-
-<button onclick="backDashboard()">
-
-Close
-
+<button onclick="backProfile()">
+BACK
 </button>
 
 </div>
 
 </div>
-
-
 
 <script src="script.js"></script>
 
