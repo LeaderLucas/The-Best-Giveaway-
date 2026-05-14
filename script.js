@@ -1,22 +1,38 @@
+// ===============================
+// START SYSTEM
+// ===============================
+
 let currentUser = null;
 
-// USERS
-let users = JSON.parse(localStorage.getItem("users")) || [];
 
-// VIDEOS
-let videos = JSON.parse(localStorage.getItem("videos")) || [];
+// USERS DATABASE
+let users = JSON.parse(
+localStorage.getItem("users")
+) || [];
 
-// SUB REQUESTS
+
+// SUBSCRIBE REQUESTS
 let subscribeRequests = JSON.parse(
 localStorage.getItem("subscribeRequests")
 ) || [];
+
 
 // WITHDRAW REQUESTS
 let withdrawRequests = JSON.parse(
 localStorage.getItem("withdrawRequests")
 ) || [];
 
-// AUTO OWNER
+
+// VIDEOS DATABASE
+let videos = JSON.parse(
+localStorage.getItem("videos")
+) || [];
+
+
+// ===============================
+// AUTO CREATE OWNERS
+// ===============================
+
 if(users.length === 0){
 
 users = [
@@ -24,6 +40,13 @@ users = [
 {
 name:"Lucas_Arora",
 password:"admin123",
+role:"owner",
+coins:0
+},
+
+{
+name:"Robert",
+password:"admin1234",
 role:"owner",
 coins:0
 }
@@ -34,32 +57,96 @@ save();
 
 }
 
-// SAVE
+
+// ===============================
+// SAVE DATABASE
+// ===============================
+
 function save(){
 
 localStorage.setItem(
+
 "users",
+
 JSON.stringify(users)
+
 );
 
 }
 
+
+// ===============================
+// ADD HISTORY
+// ===============================
+
+function addHistory(
+username,
+text
+){
+
+let history = JSON.parse(
+
+localStorage.getItem(
+"history_"+username
+)
+
+) || [];
+
+history.push(text);
+
+localStorage.setItem(
+
+"history_"+username,
+
+JSON.stringify(history)
+
+);
+
+}
+
+
+// ===============================
 // SIGNUP
+// ===============================
+
 function signup(){
 
 let u =
-document.getElementById("username").value;
+document.getElementById("username")
+.value;
 
 let p =
-document.getElementById("password").value;
+document.getElementById("password")
+.value;
 
-if(users.find(x=>x.name===u)){
 
-alert("User already exists");
+// EMPTY CHECK
+if(!u || !p){
+
+alert(
+"Fill all fields ❌"
+);
+
 return;
 
 }
 
+
+// USER EXISTS
+if(
+users.find(x => x.name === u)
+){
+
+alert(
+"User already exists ❌"
+);
+
+return;
+
+}
+
+
+// CREATE USER
 users.push({
 
 name:u,
@@ -71,33 +158,53 @@ coins:0
 
 save();
 
-alert("Signup successful ✅");
+alert(
+"Signup Successful ✅"
+);
 
 }
-
+// ===============================
 // LOGIN
+// ===============================
+
 function login(){
 
 let u =
-document.getElementById("username").value;
+document.getElementById("username")
+.value;
 
 let p =
-document.getElementById("password").value;
+document.getElementById("password")
+.value;
 
+
+// FIND USER
 let user = users.find(
 
-x => x.name===u &&
-x.password===p
+x =>
+
+x.name === u
+
+&&
+
+x.password === p
 
 );
 
+
+// WRONG LOGIN
 if(!user){
 
-alert("Wrong login ❌");
+alert(
+"Wrong Username or Password ❌"
+);
+
 return;
 
 }
 
+
+// SAVE SESSION
 currentUser = user;
 
 localStorage.setItem(
@@ -105,11 +212,17 @@ localStorage.setItem(
 u
 );
 
+
+// OPEN DASHBOARD
 showDashboard();
 
 }
 
+
+// ===============================
 // SHOW DASHBOARD
+// ===============================
+
 function showDashboard(){
 
 hideAllPages();
@@ -117,35 +230,64 @@ hideAllPages();
 document.getElementById("dashboard")
 .classList.remove("hidden");
 
+
+// USER INFO
 document.getElementById("userInfo")
 .innerText =
-"User: " + currentUser.name;
 
+"User: " +
+currentUser.name;
+
+
+// ROLE INFO
 document.getElementById("roleInfo")
 .innerText =
-"Role: " + currentUser.role;
 
+"Role: " +
+currentUser.role;
+
+
+// UPDATE UI
 updateUI();
 
 }
 
+
+// ===============================
 // UPDATE UI
+// ===============================
+
 function updateUI(){
 
 let user = users.find(
-x => x.name===currentUser.name
+x => x.name === currentUser.name
 );
 
+
+// UPDATE COINS
 document.getElementById("coins")
 .innerText = user.coins;
 
-// ADMIN PANEL
+
+// HIDE ADMIN PANEL
 document.getElementById("adminPanel")
 .classList.add("hidden");
 
+
+// HIDE OWNER CONTROLS
+document.getElementById("ownerControls")
+.style.display = "none";
+
+
+// SHOW ADMIN PANEL
 if(
-user.role==="owner" ||
-user.role==="admin"
+
+user.role === "owner"
+
+||
+
+user.role === "admin"
+
 ){
 
 document.getElementById("adminPanel")
@@ -153,10 +295,21 @@ document.getElementById("adminPanel")
 
 }
 
-// SUBSCRIBE BUTTON HIDE
+
+// OWNER ONLY
+if(user.role === "owner"){
+
+document.getElementById("ownerControls")
+.style.display = "block";
+
+}
+
+
+// SUBSCRIBE BUTTON CONTROL
 let approvedUsers = JSON.parse(
 localStorage.getItem("subApproved")
 ) || [];
+
 
 if(
 approvedUsers.includes(user.name)
@@ -173,8 +326,10 @@ document.getElementById("subscribeBox")
 }
 
 }
+// ===============================
+// HIDE ALL PAGES
+// ===============================
 
-// HIDE ALL
 function hideAllPages(){
 
 document.getElementById("loginPage")
@@ -203,71 +358,134 @@ document.getElementById("withdrawRequestPage")
 
 }
 
-// BACK
+
+// ===============================
+// BACK DASHBOARD
+// ===============================
+
 function backDashboard(){
+
+hideAllPages();
+
+document.getElementById("dashboard")
+.classList.remove("hidden");
+
+updateUI();
+
+}
+
+
+// ===============================
+// LOGOUT
+// ===============================
+
+function logout(){
+
+currentUser = null;
+
+localStorage.removeItem(
+"currentUser"
+);
+
+hideAllPages();
+
+document.getElementById("loginPage")
+.classList.remove("hidden");
+
+document.getElementById("username")
+.value = "";
+
+document.getElementById("password")
+.value = "";
+
+alert(
+"Logged out successfully 🚪"
+);
+
+}
+
+
+// ===============================
+// AUTO LOGIN
+// ===============================
+
+window.onload = function(){
+
+let saved =
+localStorage.getItem("currentUser");
+
+if(saved){
+
+let user = users.find(
+x => x.name === saved
+);
+
+if(user){
+
+currentUser = user;
 
 showDashboard();
 
 }
 
-// STATUS
+}
+
+}
+
+
+// ===============================
+// STATUS FEATURE
+// ===============================
+
 function statusFeature(){
 
 let history = JSON.parse(
+
 localStorage.getItem(
 "history_"+currentUser.name
 )
+
 ) || [];
 
 let text = "";
 
 history.forEach(h=>{
 
-text += "• " + h + "\n";
+text +=
+"• " + h + "\n";
 
 });
 
-if(text===""){
-text = "No history";
+if(text === ""){
+
+text = "No history found";
+
 }
 
 alert(
 
 "📊 STATUS 📊\n\n" +
 
-"Name: " + currentUser.name + "\n\n" +
+"Name: " +
+currentUser.name +
 
-"Role: " + currentUser.role + "\n\n" +
+"\n\nRole: " +
+currentUser.role +
 
-"Coins: " + currentUser.coins + "\n\n" +
+"\n\nCoins: " +
+currentUser.coins +
 
-"━━━━━━━━━━\n\n" +
+"\n\n━━━━━━━━━━\n\n" +
 
 text
 
 );
 
 }
+// ===============================
+// OPEN EARN PAGE
+// ===============================
 
-// HISTORY
-function addHistory(user,text){
-
-let history = JSON.parse(
-localStorage.getItem(
-"history_"+user
-)
-) || [];
-
-history.push(text);
-
-localStorage.setItem(
-"history_"+user,
-JSON.stringify(history)
-);
-
-}
-
-// EARN PAGE
 function openEarnPage(){
 
 hideAllPages();
@@ -277,52 +495,77 @@ document.getElementById("earnPage")
 
 showVideos();
 
+
+// OWNER ONLY UPLOAD
 if(
-currentUser.role==="owner"
+currentUser.role === "owner"
 ){
 
 document.getElementById("uploadBox")
-.style.display = "block";
+.classList.remove("hidden");
 
 }else{
 
 document.getElementById("uploadBox")
-.style.display = "none";
+.classList.add("hidden");
 
 }
 
 }
 
+
+// ===============================
 // UPLOAD VIDEO
+// ===============================
+
 function uploadVideo(){
 
 let link =
-document.getElementById("videoLink").value;
+document.getElementById("videoLink")
+.value;
 
 let reward =
 parseInt(
-document.getElementById("videoReward").value
+
+document.getElementById("videoReward")
+.value
+
 );
 
+
+// EMPTY CHECK
 if(!link || !reward){
 
-alert("Fill all fields");
+alert(
+"Fill all fields ❌"
+);
+
 return;
 
 }
 
+
+// ADD VIDEO
 videos.push({
 
-id:Date.now(),
-link:link,
-reward:reward
+id: Date.now(),
+
+link: link,
+
+reward: reward
 
 });
 
+
+// SAVE
 localStorage.setItem(
+
 "videos",
+
 JSON.stringify(videos)
+
 );
+
 
 // DISCORD WEBHOOK
 fetch(
@@ -339,19 +582,38 @@ body:JSON.stringify({
 
 content:
 "🎥 NEW VIDEO UPLOADED\n\n" +
+
+"Reward: " +
+reward +
+" Coins 💰\n\n" +
+
 link
 
 })
 
 });
 
-alert("Video uploaded ✅");
+
+// CLEAR INPUT
+document.getElementById("videoLink")
+.value = "";
+
+document.getElementById("videoReward")
+.value = "";
+
+alert(
+"Video Uploaded ✅"
+);
 
 showVideos();
 
 }
 
+
+// ===============================
 // SHOW VIDEOS
+// ===============================
+
 function showVideos(){
 
 let area =
@@ -359,18 +621,28 @@ document.getElementById("videoArea");
 
 area.innerHTML = "";
 
-if(videos.length===0){
+
+// NO VIDEO
+if(videos.length === 0){
 
 area.innerHTML = `
+
+<div class="card">
+
 <h3>
 No Videos Available 📭
 </h3>
+
+</div>
+
 `;
 
 return;
 
 }
 
+
+// VIDEO LIST
 videos.forEach(v=>{
 
 area.innerHTML += `
@@ -378,8 +650,10 @@ area.innerHTML += `
 <div class="card">
 
 <h3>
+
 Reward:
-${v.reward} Coins
+${v.reward} Coins 💰
+
 </h3>
 
 <button
@@ -400,74 +674,112 @@ Watch Video ▶
 });
 
 }
-
+// ===============================
 // WATCH VIDEO
-function watchVideo(link,reward,id){
+// ===============================
+
+function watchVideo(
+link,
+reward,
+id
+){
 
 let claimed = JSON.parse(
+
 localStorage.getItem(
 "claimed_"+currentUser.name
 )
+
 ) || [];
 
-if(claimed.includes(id)){
 
-alert("Already claimed ❌");
+// ALREADY CLAIMED
+if(
+claimed.includes(id)
+){
+
+alert(
+"Reward already claimed ❌"
+);
+
 return;
 
 }
 
+
+// OPEN VIDEO
 window.open(
 link,
 "_blank"
 );
 
-let user = users.find(x => x.name === currentUser.name);
-user.coins += reward;
-currentUser.coins = user.coins;
-save();
+
+// ADD COINS
+currentUser.coins += reward;
 
 save();
 
+
+// SAVE CLAIM
 claimed.push(id);
 
 localStorage.setItem(
+
 "claimed_"+currentUser.name,
+
 JSON.stringify(claimed)
+
 );
 
+
+// ADD HISTORY
 addHistory(
 
 currentUser.name,
 
 "You earned " +
 reward +
-" coins by video"
+" coins by watching video"
 
 );
 
+
+// REMOVE VIDEO
 videos = videos.filter(
-x=>x.id!==id
+x => x.id !== id
 );
 
+
+// SAVE VIDEOS
 localStorage.setItem(
+
 "videos",
+
 JSON.stringify(videos)
+
 );
 
+
+// UPDATE UI
 updateUI();
 
 alert(
+
 "You earned " +
 reward +
 " coins 💰"
+
 );
 
 showVideos();
 
 }
 
-// OPEN SUBSCRIBE
+
+// ===============================
+// OPEN SUBSCRIBE PAGE
+// ===============================
+
 function openSubscribePage(){
 
 hideAllPages();
@@ -477,44 +789,46 @@ document.getElementById("subscribePage")
 
 }
 
- // SUBMIT VERIFICATION
+
+// ===============================
+// SUBMIT VERIFICATION
+// ===============================
+
 function submitVerification(){
 
 let name =
-document.getElementById("gameName").value;
+document.getElementById("gameName")
+.value;
 
 let number =
-document.getElementById("gameNumber").value;
+document.getElementById("gameNumber")
+.value;
 
 let file =
-document.getElementById("proofImage").files[0];
+document.getElementById("proofImage")
+.files[0];
 
-// ✅ EMPTY CHECK
+
+// EMPTY CHECK
 if(!name || !number || !file){
 
-alert("Fill all fields");
+alert(
+"Fill all fields ❌"
+);
+
 return;
 
 }
 
-// ✅ 6 DIGIT CHECK
-if(!/^\d{6}$/.test(number)){
-
-alert("Game Number must be exactly 6 digits ❌");
-return;
-
-}
-
-// ✅ REFRESH LATEST DATA
-subscribeRequests = JSON.parse(
-localStorage.getItem("subscribeRequests")
-) || [];
 
 // CHECK EXISTING REQUEST
 let alreadyApplied =
 subscribeRequests.find(
+
 x => x.user === currentUser.name
+
 );
+
 
 if(alreadyApplied){
 
@@ -526,10 +840,12 @@ return;
 
 }
 
+
 // CHECK APPROVED
 let approvedUsers = JSON.parse(
 localStorage.getItem("subApproved")
 ) || [];
+
 
 if(
 approvedUsers.includes(currentUser.name)
@@ -542,26 +858,39 @@ alert(
 return;
 
 }
+ // ===============================
+// FILE READER
+// ===============================
 
 let reader = new FileReader();
 
 reader.onload = function(e){
 
+// SAVE REQUEST
 subscribeRequests.push({
 
 user: currentUser.name,
+
 game: name,
+
 number: number,
+
 image: e.target.result
 
 });
 
+
+// SAVE STORAGE
 localStorage.setItem(
+
 "subscribeRequests",
+
 JSON.stringify(subscribeRequests)
+
 );
 
-// 🔥 DISCORD WEBHOOK
+
+// DISCORD WEBHOOK
 fetch(
 "https://discord.com/api/webhooks/1503773951325638716/zeBKmrRqWRfaSZBFC07__bZ_hqOsnFqSgyd_zigjklRT4ebCsmq8jhGP5ZbYrcoD6oNX",
 {
@@ -576,36 +905,50 @@ body:JSON.stringify({
 
 content:
 "🆕 NEW SUBSCRIBER REQUEST\n\n" +
-"User: " + currentUser.name + "\n" +
-"Game Name: " + name + "\n" +
-"Game Number: " + number + "\n" +
-"Status: Pending ⏳"
+
+"User: " +
+currentUser.name +
+
+"\nGame Name: " +
+name +
+
+"\nNumber: " +
+number
 
 })
 
 });
 
-// ✅ SUCCESS
-alert(
-"Application Submitted ✅"
-);
 
-// 🔥 AUTO REFRESH ADMIN PAGE
-if(
-document.getElementById("newSubscriberPage")
-.classList.contains("hidden") === false
-){
-openNewSubscriberPage();
-}
+// CLEAR INPUTS
+document.getElementById("gameName")
+.value = "";
+
+document.getElementById("gameNumber")
+.value = "";
+
+document.getElementById("proofImage")
+.value = "";
+
+alert(
+"Verification Submitted ✅"
+);
 
 backDashboard();
 
 };
 
+
+// READ IMAGE
 reader.readAsDataURL(file);
 
 }
-// NEW SUBSCRIBERS PAGE
+
+
+// ===============================
+// OPEN NEW SUBSCRIBERS PAGE
+// ===============================
+
 function openNewSubscriberPage(){
 
 hideAllPages();
@@ -613,15 +956,18 @@ hideAllPages();
 document.getElementById("newSubscriberPage")
 .classList.remove("hidden");
 
+
 // RELOAD REQUESTS
 subscribeRequests = JSON.parse(
 localStorage.getItem("subscribeRequests")
 ) || [];
 
+
 let box =
 document.getElementById("subscriberList");
 
 box.innerHTML = "";
+
 
 // EMPTY
 if(subscribeRequests.length === 0){
@@ -641,6 +987,7 @@ No New Subscriber Request 📭
 return;
 
 }
+
 
 // SHOW REQUESTS
 subscribeRequests.forEach((s,i)=>{
@@ -685,40 +1032,55 @@ Approve ✅
 });
 
 }
-
-
-
+// ===============================
 // APPROVE SUBSCRIBER
+// ===============================
+
 function approveSubscriber(index){
 
-// RELOAD
+// RELOAD REQUESTS
 subscribeRequests = JSON.parse(
 localStorage.getItem("subscribeRequests")
 ) || [];
 
+
+// GET REQUEST
 let s = subscribeRequests[index];
 
+
+// FIND USER
 let user = users.find(
 x => x.name === s.user
 );
 
+
+// USER NOT FOUND
 if(!user){
 
-alert("User not found ❌");
+alert(
+"User not found ❌"
+);
+
 return;
 
 }
 
+
 // ADD COINS
 user.coins += 50000;
 
+
+// SAVE USERS
 save();
+
 
 // APPROVED LIST
 let approvedUsers = JSON.parse(
 localStorage.getItem("subApproved")
 ) || [];
 
+
+// ADD APPROVED USER
 if(
 !approvedUsers.includes(user.name)
 ){
@@ -726,20 +1088,25 @@ if(
 approvedUsers.push(user.name);
 
 localStorage.setItem(
+
 "subApproved",
+
 JSON.stringify(approvedUsers)
+
 );
 
 }
 
-// HISTORY
+
+// ADD HISTORY
 addHistory(
 
 user.name,
 
-"You earned 50000 coins by subscribe"
+"You earned 50000 coins by subscribe verification"
 
 );
+
 
 // DISCORD WEBHOOK
 fetch(
@@ -757,17 +1124,21 @@ body:JSON.stringify({
 content:
 "✅ SUBSCRIBER APPROVED\n\n" +
 
-"User: " + user.name + "\n" +
+"User: " +
+user.name +
 
-"Reward: 50000 Coins 💰"
+"\nReward: 50000 Coins 💰"
 
 })
 
 });
 
+
 // REMOVE REQUEST
 subscribeRequests.splice(index,1);
 
+
+// SAVE REQUESTS
 localStorage.setItem(
 
 "subscribeRequests",
@@ -776,15 +1147,22 @@ JSON.stringify(subscribeRequests)
 
 );
 
+
 alert(
 "Subscriber Approved ✅"
 );
 
+
+// REFRESH PAGE
 openNewSubscriberPage();
 
 }
 
-// MEMBERS PAGE
+
+// ===============================
+// OPEN MEMBERS PAGE
+// ===============================
+
 function openMembersPage(){
 
 hideAllPages();
@@ -792,20 +1170,79 @@ hideAllPages();
 document.getElementById("membersPage")
 .classList.remove("hidden");
 
+
 let table =
 document.getElementById("membersTable");
 
 table.innerHTML = "";
 
-users.forEach((u,i)=>{
+
+// RELOAD USERS
+users = JSON.parse(
+localStorage.getItem("users")
+) || [];
+
+
+// APPROVED USERS
+let approvedUsers = JSON.parse(
+localStorage.getItem("subApproved")
+) || [];
+
+
+// FILTER USERS
+let filteredUsers = users.filter(
+
+u =>
+
+approvedUsers.includes(u.name)
+
+||
+
+u.role === "owner"
+
+||
+
+u.role === "admin"
+
+);
+
+
+// EMPTY
+if(filteredUsers.length === 0){
+
+table.innerHTML = `
+
+<tr>
+
+<td colspan="4">
+
+No Subscribers Found 📭
+
+</td>
+
+</tr>
+
+`;
+
+return;
+
+}
+ // ===============================
+// SHOW MEMBERS
+// ===============================
+
+filteredUsers.forEach((u,i)=>{
 
 table.innerHTML += `
 
 <tr>
 
 <td>${i+1}</td>
+
 <td>${u.name}</td>
+
 <td>${u.role}</td>
+
 <td>${u.coins}</td>
 
 </tr>
@@ -816,7 +1253,11 @@ table.innerHTML += `
 
 }
 
-// WITHDRAW PAGE
+
+// ===============================
+// OPEN WITHDRAW PAGE
+// ===============================
+
 function openWithdrawPage(){
 
 hideAllPages();
@@ -826,80 +1267,137 @@ document.getElementById("withdrawPage")
 
 }
 
- // SUBMIT WITHDRAW
+
+// ===============================
+// SUBMIT WITHDRAW
+// ===============================
+
 function submitWithdraw(){
 
-let number = document.getElementById("withdrawNumber").value;
-let amount = Number(document.getElementById("withdrawAmount").value);
+let number =
+document.getElementById("withdrawNumber")
+.value;
 
-// ✅ EMPTY CHECK FIRST
-if(!number || !amount){
-alert("Fill all fields");
-return;
-}
+let amount =
+parseInt(
 
-// ✅ 6 DIGIT CHECK
-if(!/^\d{6}$/.test(number)){
-alert("Game Number must be exactly 6 digits ❌");
-return;
-}
+document.getElementById("withdrawAmount")
+.value
 
-// ❌ ONE PENDING REQUEST CHECK
-let existing = withdrawRequests.find(
-x => x.user === currentUser.name && x.status !== "Completed"
 );
 
-if(existing){
-alert("⚠ You already have a pending withdraw request");
+
+// EMPTY CHECK
+if(!number || !amount){
+
+alert(
+"Fill all fields ❌"
+);
+
 return;
+
 }
 
-// USER CHECK
-let user = users.find(x => x.name === currentUser.name);
 
-if(!user){
-alert("User not found ❌");
+// LOW COINS
+if(currentUser.coins < amount){
+
+alert(
+"Not enough coins ❌"
+);
+
 return;
+
 }
 
-// BALANCE CHECK
-if(user.coins < amount){
-alert("Not enough coins ❌");
-return;
-}
 
 // CREATE REQUEST
 withdrawRequests.push({
+
 user: currentUser.name,
+
 number: number,
+
 amount: amount,
-status: "Waiting",
-completed: false
+
+status: "Waiting For Checking",
+
+locked: false
+
 });
 
-localStorage.setItem("withdrawRequests", JSON.stringify(withdrawRequests));
+
+// SAVE REQUESTS
+localStorage.setItem(
+
+"withdrawRequests",
+
+JSON.stringify(withdrawRequests)
+
+);
 
 
-// 🔥 DISCORD WEBHOOK (URL ADDED)
-fetch("https://discord.com/api/webhooks/1503774858146742533/cR1OERc6wVRpu0Wy708kRphgmdcssuS_9QDuUHrSTSaK3wJhGDHMBjNl0DdX4eOGc2ey", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
+// DISCORD WEBHOOK
+fetch(
+"https://discord.com/api/webhooks/1503774858146742533/cR1OERc6wVRpu0Wy708kRphgmdcssuS_9QDuUHrSTSaK3wJhGDHMBjNl0DdX4eOGc2ey",
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
 },
-body: JSON.stringify({
+
+body:JSON.stringify({
+
 content:
-"💸 NEW WITHDRAW REQUEST\n\n" +
-"User: " + currentUser.name + "\n" +
-"Number: " + number + "\n" +
-"Amount: " + amount + " coins 💰\n" +
-"Status: Waiting ⏳"
+"💸 NEW WITHDRAWAL REQUEST\n\n" +
+
+"User: " +
+currentUser.name +
+
+"\nNumber: " +
+number +
+
+"\nAmount: " +
+amount +
+" Coins"
+
 })
+
 });
 
-alert("Withdraw Request Submitted ✅");
+
+// ADD HISTORY
+addHistory(
+
+currentUser.name,
+
+"You submitted withdrawal request of " +
+amount +
+" coins"
+
+);
+
+
+// CLEAR INPUTS
+document.getElementById("withdrawNumber")
+.value = "";
+
+document.getElementById("withdrawAmount")
+.value = "";
+
+alert(
+"Withdrawal Request Submitted ✅"
+);
+
 backDashboard();
-}
- // OPEN WITHDRAW REQUESTS
+
+ }
+// ===============================
+// OPEN WITHDRAW REQUESTS
+// ===============================
+
 function openWithdrawRequests(){
 
 hideAllPages();
@@ -907,134 +1405,284 @@ hideAllPages();
 document.getElementById("withdrawRequestPage")
 .classList.remove("hidden");
 
+
+// RELOAD REQUESTS
+withdrawRequests = JSON.parse(
+localStorage.getItem("withdrawRequests")
+) || [];
+
+
 let table =
 document.getElementById("withdrawTable");
 
 table.innerHTML = "";
 
-withdrawRequests.forEach((w,i)=>{
 
-let locked =
-w.status === "Completed" ? "disabled" : "";
+// EMPTY
+if(withdrawRequests.length === 0){
 
-table.innerHTML += `
+table.innerHTML = `
+
 <tr>
 
-<td>${w.user}</td>
-<td>${w.number}</td>
-<td>${w.amount}</td>
+<td colspan="4">
 
-<td>
-<select ${locked}
-onchange="changeWithdrawStatus(${i}, this.value)">
+No Withdrawal Request 📭
 
-<option selected>${w.status}</option>
-<option>Waiting</option>
-<option>In Progress</option>
-<option>Completed</option>
-
-</select>
 </td>
 
 </tr>
-`;
-});
-}
-// CHANGE STATUS
-function changeWithdrawStatus(index, status){
 
+`;
+
+return;
+
+}
+
+
+// SHOW REQUESTS
+withdrawRequests.forEach((w,i)=>{
+
+table.innerHTML += `
+
+<tr>
+
+<td>
+${w.user}
+</td>
+
+<td>
+${w.number}
+</td>
+
+<td>
+${w.amount}
+</td>
+
+<td>
+
+${
+w.locked
+
+?
+
+`<span style="color:lime;">
+${w.status}
+</span>`
+
+:
+
+`
+
+<select
+onchange="changeWithdrawStatus(
+${i},
+this.value
+)">
+
+<option>
+${w.status}
+</option>
+
+<option>
+In Progress
+</option>
+
+<option>
+Completed
+</option>
+
+</select>
+
+`
+
+}
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+
+// ===============================
+// CHANGE WITHDRAW STATUS
+// ===============================
+
+function changeWithdrawStatus(
+index,
+status
+){
+
+// RELOAD REQUESTS
+withdrawRequests = JSON.parse(
+localStorage.getItem("withdrawRequests")
+) || [];
+
+
+// GET REQUEST
 let w = withdrawRequests[index];
 
-if(!w){
-alert("Request not found ❌");
+
+// LOCK CHECK
+if(w.locked){
+
+alert(
+"Status already locked ❌"
+);
+
 return;
+
 }
 
-if(w.completed){
-alert("Already completed 🔒");
-return;
-}
 
+// UPDATE STATUS
 w.status = status;
-
-// SAVE FIRST (IMPORTANT FIX)
-localStorage.setItem("withdrawRequests", JSON.stringify(withdrawRequests));
+ // ===============================
+// COMPLETED
+// ===============================
 
 if(status === "Completed"){
 
-let user = users.find(x => x.name === w.user);
-
-if(!user){
-alert("User not found ❌");
-return;
-}
-
-// DOUBLE SAFETY
-if(!w.completed){
-
-w.completed = true;
-
-user.coins -= Number(w.amount);
-save();
-
-addHistory(
-user.name,
-"Withdraw completed: " + w.amount
+// FIND USER
+let user = users.find(
+x => x.name === w.user
 );
 
-// 🔥 DISCORD WEBHOOK (FIXED + SAFE)
-fetch("https://discord.com/api/webhooks/1503774858146742533/cR1OERc6wVRpu0Wy708kRphgmdcssuS_9QDuUHrSTSaK3wJhGDHMBjNl0DdX4eOGc2ey", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
+
+// REMOVE COINS
+if(user){
+
+user.coins -= w.amount;
+
+if(user.coins < 0){
+user.coins = 0;
+}
+
+save();
+
+}
+
+
+// LOCK REQUEST
+w.locked = true;
+
+
+// ADD HISTORY
+addHistory(
+
+w.user,
+
+"You successfully withdraw amount of " +
+w.amount
+
+);
+
+
+// DISCORD WEBHOOK
+fetch(
+"https://discord.com/api/webhooks/1503774858146742533/cR1OERc6wVRpu0Wy708kRphgmdcssuS_9QDuUHrSTSaK3wJhGDHMBjNl0DdX4eOGc2ey",
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
 },
-body: JSON.stringify({
+
+body:JSON.stringify({
+
 content:
-"💸 WITHDRAW COMPLETED\n\n" +
-w.amount + " coins have been successfully deposited in " +
-w.user + " game account by " +
+
+"💸 WITHDRAWAL LOG [V3]\n\n" +
+
+w.amount +
+
+" coins transferred successfully to " +
+
+w.user +
+
+" game account 🎮\n\n" +
+
+"Approved By:\n" +
+
 currentUser.name +
-" (admin/owner) <@&1503714193214406827> ✅"
+" 👑"
+
 })
-})
-.then(res => console.log("Webhook sent"))
-.catch(err => console.error("Webhook failed:", err));
+
+});
 
 }
 
-}
 
-alert("Status Updated ✅");
+// SAVE REQUESTS
+localStorage.setItem(
+
+"withdrawRequests",
+
+JSON.stringify(withdrawRequests)
+
+);
+
+
+alert(
+"Status Updated ✅"
+);
+
+
+// REFRESH PAGE
 openWithdrawRequests();
+
 }
+
+
+// ===============================
 // MAKE ADMIN
+// ===============================
+
 function makeAdmin(){
 
-// ONLY OWNER
+// OWNER ONLY
 if(currentUser.role !== "owner"){
 
 alert(
-"Access Denied ❌ Only owner"
+"Only owner can use this ❌"
 );
 
 return;
 
 }
 
-let target =
-prompt("Username?");
 
+// USERNAME
+let target =
+prompt("Enter Username");
+
+
+// FIND USER
 let user = users.find(
 x => x.name === target
 );
 
+
+// USER NOT FOUND
 if(!user){
 
-alert("User not found ❌");
+alert(
+"User not found ❌"
+);
+
 return;
 
 }
 
+
+// MAKE ADMIN
 user.role = "admin";
 
 save();
@@ -1045,73 +1693,111 @@ target +
 );
 
 }
- // ADD COINS
+// ===============================
+// ADD COINS
+// ===============================
+
 function addCoins(){
 
-// ONLY OWNER
+// OWNER ONLY
 if(currentUser.role !== "owner"){
 
 alert(
-"Access Denied ❌ Only owner"
+"Only owner can use this ❌"
 );
 
 return;
 
 }
 
-let target =
-prompt("Username?");
 
+// USERNAME
+let target =
+prompt("Enter Username");
+
+
+// COINS
 let amount =
 parseInt(
-prompt("Coins?")
+prompt("Enter Coins")
 );
 
+
+// INVALID
+if(!amount){
+
+alert(
+"Invalid amount ❌"
+);
+
+return;
+
+}
+
+
+// FIND USER
 let user = users.find(
 x => x.name === target
 );
 
+
+// USER NOT FOUND
 if(!user){
 
-alert("User not found ❌");
+alert(
+"User not found ❌"
+);
+
 return;
 
 }
 
+
+// ADD COINS
 user.coins += amount;
 
 save();
 
+
+// HISTORY
 addHistory(
 
 user.name,
 
 "You received " +
 amount +
-" coins by owner"
+" coins from owner"
 
 );
 
+
 alert(
+
 amount +
 " coins added to " +
 user.name +
 " ✅"
+
 );
 
 }
 
 
+// ===============================
 // AUTO LOGIN
+// ===============================
+
 window.onload = function(){
 
 let saved =
 localStorage.getItem("currentUser");
 
+
+// USER FOUND
 if(saved){
 
 let user = users.find(
-x=>x.name===saved
+x => x.name === saved
 );
 
 if(user){
@@ -1125,19 +1811,3 @@ showDashboard();
 }
 
 }
-function logout(){
-
-currentUser = null;
-
-// remove saved login
-localStorage.removeItem("currentUser");
-
-// hide all pages
-hideAllPages();
-
-// show login page
-document.getElementById("loginPage")
-.classList.remove("hidden");
-
-alert("Logged out successfully 🚪");
-  }
