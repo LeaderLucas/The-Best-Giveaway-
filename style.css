@@ -1,21 +1,19 @@
 *{
-
 margin:0;
 padding:0;
 box-sizing:border-box;
-
 }
 
 body{
 
-font-family:Arial, sans-serif;
+font-family:Arial;
 
 background:
 linear-gradient(
 135deg,
-#050816,
-#0d132b,
-#111827
+#0f172a,
+#111827,
+#1e293b
 );
 
 min-height:100vh;
@@ -30,39 +28,34 @@ color:white;
 
 }
 
-
-/* MAIN CARD */
-
 .card{
 
 width:100%;
 max-width:380px;
 
 background:
-rgba(10,10,20,0.95);
-
-border-radius:28px;
+rgba(15,15,25,0.95);
 
 padding:28px;
 
+border-radius:28px;
+
 box-shadow:
 
-0 0 25px rgba(0,255,255,0.25),
+0 0 25px rgba(0,255,255,0.2),
 
-0 0 50px rgba(255,0,255,0.15);
+0 0 45px rgba(255,0,255,0.12);
 
-backdrop-filter:blur(10px);
-
-animation:fadeIn 0.4s ease;
+animation:fade 0.3s ease;
 
 }
 
+.title,
+.verifyTitle,
+.withdrawTitle,
+.reviewTitle{
 
-/* TITLES */
-
-.title{
-
-font-size:38px;
+font-size:34px;
 
 font-weight:bold;
 
@@ -83,45 +76,6 @@ linear-gradient(
 
 }
 
-.verifyTitle{
-
-font-size:34px;
-
-text-align:center;
-
-margin-bottom:25px;
-
-color:#00ffe0;
-
-}
-
-.withdrawTitle{
-
-font-size:34px;
-
-text-align:center;
-
-margin-bottom:25px;
-
-color:#ffb300;
-
-}
-
-.reviewTitle{
-
-font-size:34px;
-
-text-align:center;
-
-margin-bottom:25px;
-
-color:#ff4fd8;
-
-}
-
-
-/* INPUTS */
-
 input,
 textarea{
 
@@ -129,21 +83,21 @@ width:100%;
 
 padding:16px;
 
-margin-top:14px;
+margin-top:15px;
 
 border:none;
 
-outline:none;
-
 border-radius:16px;
 
-font-size:17px;
+outline:none;
 
-background:#f2f2f2;
+font-size:16px;
 
-color:#111;
+background:#f1f5f9;
 
 font-weight:bold;
+
+color:black;
 
 }
 
@@ -154,9 +108,6 @@ height:120px;
 resize:none;
 
 }
-
-
-/* BUTTONS */
 
 button{
 
@@ -170,7 +121,7 @@ border:none;
 
 border-radius:18px;
 
-font-size:18px;
+font-size:17px;
 
 font-weight:bold;
 
@@ -182,8 +133,13 @@ color:white;
 
 }
 
+button:hover{
 
-/* DIFFERENT BUTTON COLORS */
+transform:scale(1.03);
+
+opacity:0.9;
+
+}
 
 .videoBtn{
 
@@ -255,20 +211,6 @@ linear-gradient(
 
 }
 
-
-/* BUTTON HOVER */
-
-button:hover{
-
-transform:scale(1.03);
-
-opacity:0.92;
-
-}
-
-
-/* BALANCE BOX */
-
 .balanceBox{
 
 margin-top:20px;
@@ -279,47 +221,31 @@ gap:15px;
 
 }
 
-
-/* BALANCE ITEMS */
-
 .balanceItem{
-
-background:
-linear-gradient(
-135deg,
-rgba(255,255,255,0.08),
-rgba(255,255,255,0.03)
-);
 
 padding:18px;
 
-border-radius:20px;
+border-radius:18px;
 
 text-align:center;
+
+background:
+rgba(255,255,255,0.06);
 
 border:
 1px solid rgba(255,255,255,0.08);
 
-box-shadow:
-0 0 15px rgba(0,0,0,0.25);
-
 }
-
-
-/* BALANCE TITLE */
 
 .balanceItem h3{
 
-font-size:16px;
+font-size:15px;
+
+color:#d1d5db;
 
 margin-bottom:10px;
 
-color:#cfcfcf;
-
 }
-
-
-/* BALANCE VALUE */
 
 .balanceItem p{
 
@@ -327,12 +253,9 @@ font-size:28px;
 
 font-weight:bold;
 
-color:#00ffae;
+color:#00ffb3;
 
 }
-
-
-/* AMOUNT BUTTONS */
 
 .amountButtons{
 
@@ -343,12 +266,9 @@ grid-template-columns:
 
 gap:12px;
 
-margin-top:18px;
+margin-top:20px;
 
 }
-
-
-/* AMOUNT BUTTON */
 
 .amountButtons button{
 
@@ -359,14 +279,11 @@ linear-gradient(
 #ff5e62
 );
 
-font-size:17px;
-
 padding:14px;
 
+font-size:16px;
+
 }
-
-
-/* SELECTED AMOUNT */
 
 #selectedAmount{
 
@@ -382,18 +299,6 @@ color:#00ffcc;
 
 }
 
-
-/* HIDDEN */
-
-.hidden{
-
-display:none;
-
-}
-
-
-/* WELCOME TEXT */
-
 #welcomeText{
 
 text-align:center;
@@ -404,58 +309,24 @@ font-weight:bold;
 
 margin-top:10px;
 
-color:#ffffff;
+}
+
+.hidden{
+
+display:none;
 
 }
 
-
-/* ANIMATION */
-
-@keyframes fadeIn{
+@keyframes fade{
 
 from{
-
 opacity:0;
 transform:translateY(20px);
-
 }
 
 to{
-
 opacity:1;
 transform:translateY(0);
-
 }
 
-}
-
-
-/* MOBILE */
-
-@media(max-width:480px){
-
-.card{
-
-padding:22px;
-
-}
-
-.title{
-
-font-size:32px;
-
-}
-
-button{
-
-font-size:16px;
-
-}
-
-.balanceItem p{
-
-font-size:24px;
-
-}
-
-}
+  }
