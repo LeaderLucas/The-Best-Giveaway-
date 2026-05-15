@@ -9,7 +9,7 @@
 content="width=device-width, initial-scale=1.0">
 
 <title>
-Simple Reward Website
+Reward Website
 </title>
 
 <link rel="stylesheet"
@@ -24,7 +24,7 @@ href="style.css">
 <div class="card"
 id="loginPage">
 
-<h1>
+<h1 class="title">
 LOGIN
 </h1>
 
@@ -53,27 +53,83 @@ LOGIN
 <div class="card hidden"
 id="homePage">
 
-<h1>
+<h1 class="title">
 WELCOME
 </h1>
 
 <p id="welcomeText"></p>
 
-<button onclick="openVideo()">
+
+
+<!-- BALANCE BOX -->
+
+<div class="balanceBox">
+
+<div class="balanceItem">
+
+<h3>
+ALL TIME EARNING
+</h3>
+
+<p id="earning">
+0
+</p>
+
+</div>
+
+<div class="balanceItem">
+
+<h3>
+ALL TIME WITHDRAWAL
+</h3>
+
+<p id="withdrawal">
+0
+</p>
+
+</div>
+
+<div class="balanceItem">
+
+<h3>
+CURRENT BALANCE
+</h3>
+
+<p id="balance">
+0
+</p>
+
+</div>
+
+</div>
+
+
+
+<button class="videoBtn"
+onclick="openVideo()">
 
 NEW VIDEO
 
 </button>
 
-<button onclick="openSubscribe()">
+<button class="verifyBtn"
+onclick="openSubscribe()">
 
 SUBSCRIBE VERIFICATION
 
 </button>
 
-<button onclick="openWithdraw()">
+<button class="withdrawBtn"
+onclick="openWithdraw()">
 
 WITHDRAW REQUEST
+
+</button>
+
+<button class="reviewBtn"
+onclick="openReview()">
+
+YOUR REVIEW
 
 </button>
 
@@ -86,27 +142,24 @@ WITHDRAW REQUEST
 <div class="card hidden"
 id="subscribePage">
 
-<h1>
+<h1 class="verifyTitle">
 SUBSCRIBE VERIFICATION
 </h1>
 
 <input
 type="text"
 id="gameId"
-placeholder="Enter Game ID">
+placeholder="Game Number">
 
-<input
-type="text"
-id="proofLink"
-placeholder="Paste Screenshot Link">
-
-<button onclick="submitSubscribe()">
+<button class="submitBtn"
+onclick="submitSubscribe()">
 
 SUBMIT
 
 </button>
 
-<button onclick="backHome()">
+<button class="backBtn"
+onclick="backHome()">
 
 BACK
 
@@ -121,50 +174,90 @@ BACK
 <div class="card hidden"
 id="withdrawPage">
 
-<h1>
+<h1 class="withdrawTitle">
 WITHDRAW REQUEST
 </h1>
 
 <input
 type="text"
 id="withdrawGameId"
-placeholder="Enter Game ID">
+placeholder="Game Number">
 
-<select id="withdrawAmount">
 
-<option value="">
-Select Amount
-</option>
 
-<option>
-5000
-</option>
+<div class="amountButtons">
 
-<option>
-10000
-</option>
-
-<option>
+<button onclick="selectAmount(30000)">
 30000
-</option>
+</button>
 
-<option>
+<button onclick="selectAmount(50000)">
 50000
-</option>
+</button>
 
-<option>
+<button onclick="selectAmount(80000)">
+80000
+</button>
+
+<button onclick="selectAmount(100000)">
 100000
-</option>
+</button>
 
-</select>
+<button onclick="selectAmount(150000)">
+150000
+</button>
 
-<button onclick="submitWithdraw()">
+</div>
+
+<p id="selectedAmount">
+Selected: 0
+</p>
+
+<button class="submitBtn"
+onclick="submitWithdraw()">
 
 SUBMIT
 
 </button>
 
-<button onclick="backHome()">
+<button class="backBtn"
+onclick="backHome()">
+
+BACK
+
+</button>
+
+</div>
+
+
+
+<!-- REVIEW PAGE -->
+
+<div class="card hidden"
+id="reviewPage">
+
+<h1 class="reviewTitle">
+YOUR REVIEW
+</h1>
+
+<textarea
+id="reviewText"
+placeholder="Write Your Review"></textarea>
+
+<input
+type="text"
+id="reviewImage"
+placeholder="Paste Screenshot Link">
+
+<button class="submitBtn"
+onclick="submitReview()">
+
+SUBMIT REVIEW
+
+</button>
+
+<button class="backBtn"
+onclick="backHome()">
 
 BACK
 
