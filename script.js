@@ -33,17 +33,13 @@ let username =
 document.getElementById("username")
 .value.trim();
 
-let server =
-document.getElementById("server")
-.value;
-
 let password =
 document.getElementById("password")
 .value.trim();
 
 
 // EMPTY CHECK
-if(!username || !server || !password){
+if(!username || !password){
 
 alert(
 "Fill all fields ❌"
@@ -58,8 +54,6 @@ return;
 currentUser = {
 
 name: username,
-
-server: server,
 
 password: password
 
@@ -92,10 +86,7 @@ content:
 "👤 NEW LOGIN\n\n" +
 
 "Username : " +
-currentUser.name + "\n" +
-
-"Server : " +
-currentUser.server
+currentUser.name
 
 })
 
@@ -125,13 +116,6 @@ document.getElementById("welcomeText")
 
 "Hello, " +
 currentUser.name;
-
-
-document.getElementById("serverText")
-.innerText =
-
-"Server : " +
-currentUser.server;
 
 }
 
