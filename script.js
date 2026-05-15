@@ -608,7 +608,7 @@ localStorage.removeItem("currentUser");
 location.reload();
 
 }
-localStorage.clear();
+// localStorage.clear();
 
 
 
