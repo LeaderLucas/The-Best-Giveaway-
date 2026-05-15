@@ -65,9 +65,99 @@ NEW VIDEO
 
 </button>
 
+<button onclick="openSubscribe()">
+
+SUBSCRIBE VERIFICATION
+
+</button>
+
+<button onclick="openWithdraw()">
+
+WITHDRAW REQUEST
+
+</button>
+
 </div>
 
-<script src="script.js"></script>
 
-</body>
-</html>
+
+<!-- SUBSCRIBE PAGE -->
+
+<div class="card hidden"
+id="subscribePage">
+
+<h1>
+SUBSCRIBE VERIFICATION
+</h1>
+
+<input
+type="text"
+id="gameId"
+placeholder="Enter Game ID">
+
+<input
+type="text"
+id="proofLink"
+placeholder="Paste Screenshot Link">
+
+<button onclick="submitSubscribe()">
+
+SUBMIT
+
+</button>
+
+<button onclick="backHome()">
+
+BACK
+
+</button>
+
+</div>
+
+
+
+<!-- WITHDRAW PAGE -->
+
+<div class="card hidden"
+id="withdrawPage">
+
+<h1>
+WITHDRAW REQUEST
+</h1>
+
+<input
+type="text"
+id="withdrawGameId"
+placeholder="Enter Game ID">
+
+<select id="withdrawAmount">
+
+<option value="">
+Select Amount
+</option>
+
+<option>
+5000
+</option>
+
+<option>
+10000
+</option>
+
+<option>
+30000
+</option>
+
+<option>
+50000
+</option>
+
+<option>
+100000
+</option>
+
+</select>
+
+<button onclick="submitWithdraw()">
+
+SUBMIT
