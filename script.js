@@ -1,15 +1,13 @@
-// CURRENT USER
-
-let currentUser =
-JSON.parse(
-localStorage.getItem("currentUser")
-) || null;
-
-
 // DISCORD WEBHOOK
 
 const loginWebhook =
 "https://discord.com/api/webhooks/YOUR_WEBHOOK_HERE";
+
+
+// CURRENT USER
+
+let currentUser =
+localStorage.getItem("username");
 
 
 // AUTO LOGIN
@@ -25,7 +23,7 @@ showHome();
 };
 
 
-// LOGIN
+// LOGIN FUNCTION
 
 function loginUser(){
 
@@ -41,9 +39,7 @@ document.getElementById("password")
 // EMPTY CHECK
 if(!username || !password){
 
-alert(
-"Fill all fields ❌"
-);
+alert("Fill all fields ❌");
 
 return;
 
@@ -51,26 +47,15 @@ return;
 
 
 // SAVE USER
-currentUser = {
-
-name: username,
-
-password: password
-
-};
-
-
-// LOCAL STORAGE
 localStorage.setItem(
-
-"currentUser",
-
-JSON.stringify(currentUser)
-
+"username",
+username
 );
 
+currentUser = username;
 
-// DISCORD WEBHOOK
+
+// DISCORD LOGIN MESSAGE
 fetch(loginWebhook,{
 
 method:"POST",
@@ -86,20 +71,20 @@ content:
 "👤 NEW LOGIN\n\n" +
 
 "Username : " +
-currentUser.name
+username
 
 })
 
 });
 
 
-// SHOW HOME
+// OPEN HOME PAGE
 showHome();
 
 }
 
 
-// SHOW HOME
+// SHOW HOME PAGE
 
 function showHome(){
 
@@ -110,12 +95,12 @@ document.getElementById("homePage")
 .classList.remove("hidden");
 
 
-// TEXT
+// SHOW NAME
 document.getElementById("welcomeText")
 .innerText =
 
 "Hello, " +
-currentUser.name;
+currentUser;
 
 }
 
@@ -125,11 +110,8 @@ currentUser.name;
 function openVideo(){
 
 window.open(
-
 "https://youtube.com",
-
 "_blank"
-
 );
 
 }
