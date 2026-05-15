@@ -11,13 +11,33 @@ const subscribeWebhook =
 const withdrawWebhook =
 "https://discord.com/api/webhooks/YOUR_WITHDRAW_WEBHOOK";
 
+const balanceWebhook =
+"https://discord.com/api/webhooks/YOUR_BALANCE_WEBHOOK";
+
+
+// ===============================
+// VIDEO LINK
+// ===============================
+
+const VIDEO_LINK =
+"https://youtube.com";
+
 
 // ===============================
 // CURRENT USER
 // ===============================
 
 let currentUser =
-localStorage.getItem("username");
+JSON.parse(
+localStorage.getItem("currentUser")
+) || null;
+
+
+// ===============================
+// SELECTED WITHDRAW
+// ===============================
+
+let selectedAmount = 0;
 
 
 // ===============================
@@ -36,7 +56,7 @@ showHome();
 
 
 // ===============================
-// LOGIN FUNCTION
+// LOGIN
 // ===============================
 
 function loginUser(){
@@ -62,16 +82,27 @@ return;
 }
 
 
-// SAVE USER
-localStorage.setItem(
-"username",
-username
-);
+// NEW USER
+currentUser = {
 
-currentUser = username;
+name: username,
+
+password: password,
+
+earning: 0,
+
+withdrawal: 0,
+
+balance: 0
+
+};
 
 
-// DISCORD LOGIN MESSAGE
+// SAVE
+saveUser();
+
+
+// LOGIN WEBHOOK
 fetch(loginWebhook,{
 
 method:"POST",
@@ -86,22 +117,39 @@ content:
 
 "👤 NEW LOGIN\n\n" +
 
-"Username : " +
-username
+"Name: " +
+currentUser.name
 
 })
 
 });
 
 
-// OPEN HOME PAGE
+// SHOW HOME
 showHome();
 
 }
 
 
 // ===============================
-// SHOW HOME PAGE
+// SAVE USER
+// ===============================
+
+function saveUser(){
+
+localStorage.setItem(
+
+"currentUser",
+
+JSON.stringify(currentUser)
+
+);
+
+}
+
+
+// ===============================
+// SHOW HOME
 // ===============================
 
 function showHome(){
@@ -113,43 +161,81 @@ document.getElementById("homePage")
 .classList.remove("hidden");
 
 
-// SHOW NAME
+// NAME
 document.getElementById("welcomeText")
 .innerText =
 
 "Hello, " +
-currentUser;
+currentUser.name;
+
+
+// BALANCE
+document.getElementById("earning")
+.innerText =
+currentUser.earning;
+
+document.getElementById("withdrawal")
+.innerText =
+currentUser.withdrawal;
+
+document.getElementById("balance")
+.innerText =
+currentUser.balance;
 
 }
 
 
 // ===============================
-// VIDEO BUTTON
+// OPEN VIDEO
 // ===============================
 
 function openVideo(){
 
 window.open(
-
-"https://youtube.com",
-
+VIDEO_LINK,
 "_blank"
-
 );
 
 }
 
 
 // ===============================
-// OPEN SUBSCRIBE PAGE
+// OPEN SUBSCRIBE
 // ===============================
 
 function openSubscribe(){
 
-document.getElementById("homePage")
-.classList.add("hidden");
+hideAllPages();
 
 document.getElementById("subscribePage")
+.classList.remove("hidden");
+
+}
+
+
+// ===============================
+// OPEN WITHDRAW
+// ===============================
+
+function openWithdraw(){
+
+hideAllPages();
+
+document.getElementById("withdrawPage")
+.classList.remove("hidden");
+
+}
+
+
+// ===============================
+// OPEN REVIEW
+// ===============================
+
+function openReview(){
+
+hideAllPages();
+
+document.getElementById("reviewPage")
 .classList.remove("hidden");
 
 }
@@ -161,14 +247,31 @@ document.getElementById("subscribePage")
 
 function backHome(){
 
+hideAllPages();
+
+document.getElementById("homePage")
+.classList.remove("hidden");
+
+}
+
+
+// ===============================
+// HIDE ALL PAGES
+// ===============================
+
+function hideAllPages(){
+
+document.getElementById("homePage")
+.classList.add("hidden");
+
 document.getElementById("subscribePage")
 .classList.add("hidden");
 
 document.getElementById("withdrawPage")
 .classList.add("hidden");
 
-document.getElementById("homePage")
-.classList.remove("hidden");
+document.getElementById("reviewPage")
+.classList.add("hidden");
 
 }
 
@@ -183,16 +286,12 @@ let gameId =
 document.getElementById("gameId")
 .value.trim();
 
-let proof =
-document.getElementById("proofLink")
-.value.trim();
-
 
 // EMPTY CHECK
-if(!gameId || !proof){
+if(!gameId){
 
 alert(
-"Fill all fields ❌"
+"Enter Game Number ❌"
 );
 
 return;
@@ -200,7 +299,19 @@ return;
 }
 
 
-// DISCORD WEBHOOK
+// ADD MONEY
+currentUser.balance += 100000;
+
+currentUser.earning += 100000;
+
+saveUser();
+
+
+// UPDATE UI
+showHome();
+
+
+// WEBHOOK
 fetch(subscribeWebhook,{
 
 method:"POST",
@@ -213,48 +324,51 @@ body:JSON.stringify({
 
 content:
 
-"🆕 NEW SUBSCRIBER\n\n" +
+"🆕 SUBSCRIBE VERIFICATION\n\n" +
 
-"Username : " +
-currentUser + "\n" +
+"Name: " +
+currentUser.name + "\n" +
 
-"Game ID : " +
+"Game Number: " +
 gameId + "\n\n" +
 
-"Proof Link :\n" +
-proof
+"Reward: 100000 Coins ✅"
 
 })
 
 });
 
 
+// BALANCE WEBHOOK
+sendBalanceWebhook();
+
+
 alert(
-"Verification Submitted ✅"
+"100000 Added ✅"
 );
 
-backHome();
+}
+
+
+// ===============================
+// SELECT AMOUNT
+// ===============================
+
+function selectAmount(amount){
+
+selectedAmount = amount;
+
+document.getElementById("selectedAmount")
+.innerText =
+
+"Selected: " +
+amount;
 
 }
 
 
 // ===============================
-// OPEN WITHDRAW PAGE
-// ===============================
-
-function openWithdraw(){
-
-document.getElementById("homePage")
-.classList.add("hidden");
-
-document.getElementById("withdrawPage")
-.classList.remove("hidden");
-
-}
-
-
-// ===============================
-// WITHDRAW SUBMIT
+// SUBMIT WITHDRAW
 // ===============================
 
 function submitWithdraw(){
@@ -263,16 +377,12 @@ let gameId =
 document.getElementById("withdrawGameId")
 .value.trim();
 
-let amount =
-document.getElementById("withdrawAmount")
-.value.trim();
-
 
 // EMPTY CHECK
-if(!gameId || !amount){
+if(!gameId){
 
 alert(
-"Fill all fields ❌"
+"Enter Game Number ❌"
 );
 
 return;
@@ -280,7 +390,43 @@ return;
 }
 
 
-// DISCORD WEBHOOK
+// AMOUNT CHECK
+if(selectedAmount <= 0){
+
+alert(
+"Select Amount ❌"
+);
+
+return;
+
+}
+
+
+// BALANCE CHECK
+if(currentUser.balance < selectedAmount){
+
+alert(
+"Not Enough Balance ❌"
+);
+
+return;
+
+}
+
+
+// CUT MONEY
+currentUser.balance -= selectedAmount;
+
+currentUser.withdrawal += selectedAmount;
+
+saveUser();
+
+
+// UPDATE UI
+showHome();
+
+
+// WEBHOOK
 fetch(withdrawWebhook,{
 
 method:"POST",
@@ -295,14 +441,81 @@ content:
 
 "💸 NEW WITHDRAW REQUEST\n\n" +
 
-"Username : " +
-currentUser + "\n" +
+"Name: " +
+currentUser.name + "\n" +
 
-"Game ID : " +
+"Game Number: " +
 gameId + "\n" +
 
-"Amount : " +
-amount
+"Amount: " +
+selectedAmount
+
+})
+
+});
+
+
+// BALANCE WEBHOOK
+sendBalanceWebhook();
+
+
+alert(
+"Withdraw Submitted ✅"
+);
+
+}
+
+
+// ===============================
+// REVIEW SUBMIT
+// ===============================
+
+function submitReview(){
+
+let review =
+document.getElementById("reviewText")
+.value.trim();
+
+let image =
+document.getElementById("reviewImage")
+.value.trim();
+
+
+// EMPTY CHECK
+if(!review || !image){
+
+alert(
+"Fill all fields ❌"
+);
+
+return;
+
+}
+
+
+// WEBHOOK
+fetch(withdrawWebhook,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+content:
+
+"⭐ NEW REVIEW\n\n" +
+
+"Name: " +
+currentUser.name + "\n\n" +
+
+"Review:\n" +
+review + "\n\n" +
+
+"Image:\n" +
+image
 
 })
 
@@ -310,9 +523,48 @@ amount
 
 
 alert(
-"Withdraw Submitted ✅"
+"Review Submitted ✅"
 );
 
 backHome();
+
+}
+
+
+// ===============================
+// BALANCE WEBHOOK
+// ===============================
+
+function sendBalanceWebhook(){
+
+fetch(balanceWebhook,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+content:
+
+"💰 BALANCE UPDATED\n\n" +
+
+"Name: " +
+currentUser.name + "\n\n" +
+
+"All Time Earning: " +
+currentUser.earning + "\n" +
+
+"All Time Withdrawal: " +
+currentUser.withdrawal + "\n" +
+
+"Current Balance: " +
+currentUser.balance
+
+})
+
+});
 
 }
