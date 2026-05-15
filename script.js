@@ -20,7 +20,12 @@ const balanceWebhook =
 
 window.onload = () => {
 
-if(currentUser){
+let savedUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+if(savedUser){
+
+currentUser = savedUser;
 
 showProfile();
 
@@ -58,22 +63,16 @@ return;
 let users =
 JSON.parse(localStorage.getItem("users")) || [];
 
-// CHECK USER
+// FIND USER
 
 let existingUser =
 users.find(
 x =>
-(
 x.mobile === mobile ||
 x.name.toLowerCase() === name.toLowerCase()
-)
-&&
-x.password === password
 );
 
 if(existingUser){
-
-// FIX OLD USERS
 
 if(existingUser.sno === undefined){
 
@@ -111,7 +110,9 @@ verified: false,
 
 lastVideo: "",
 
-videoPending: false
+videoPending: false,
+
+lastWithdrawAmount: 0
 
 };
 
@@ -211,7 +212,7 @@ document.getElementById("reviewName")
 .value =
 currentUser.name;
 
-// LOCK BUTTON
+// LOCK VERIFY
 
 if(currentUser.verified){
 
@@ -233,7 +234,8 @@ JSON.parse(localStorage.getItem("users")) || [];
 
 let index =
 users.findIndex(
-x => x.mobile === currentUser.mobile
+x =>
+x.mobile === currentUser.mobile
 );
 
 if(index !== -1){
@@ -258,7 +260,7 @@ JSON.stringify(currentUser)
 
 }
 
-// BALANCE UPDATE WEBHOOK
+// BALANCE WEBHOOK
 
 function sendBalanceUpdate(){
 
@@ -346,26 +348,16 @@ document.getElementById("profilePage")
 
 function watchVideo(){
 
-// ALREADY CLAIMED
-
 if(currentUser.lastVideo === VIDEO_LINK){
 
-alert(
-"Reward already claimed ❌"
-);
-
+alert("Reward already claimed ❌");
 return;
 
 }
 
-// PROCESSING
-
 if(currentUser.videoPending){
 
-alert(
-"Reward already processing ⏳"
-);
-
+alert("Reward already processing ⏳");
 return;
 
 }
@@ -379,7 +371,7 @@ saveUser();
 window.location.href =
 VIDEO_LINK;
 
-// WAIT 10 SECONDS
+// WAIT 10 SEC
 
 setTimeout(() => {
 
@@ -673,4 +665,4 @@ alert("Review Submitted ✅");
 
 backProfile();
 
-  }
+}
