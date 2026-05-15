@@ -1,6 +1,4 @@
-// ===============================
-// DISCORD WEBHOOKS
-// ===============================
+// WEBHOOKS
 
 const loginWebhook =
 "https://discord.com/api/webhooks/YOUR_LOGIN_WEBHOOK";
@@ -11,42 +9,35 @@ const subscribeWebhook =
 const withdrawWebhook =
 "https://discord.com/api/webhooks/YOUR_WITHDRAW_WEBHOOK";
 
+const reviewWebhook =
+"https://discord.com/api/webhooks/YOUR_REVIEW_WEBHOOK";
+
 const balanceWebhook =
 "https://discord.com/api/webhooks/YOUR_BALANCE_WEBHOOK";
 
 
-// ===============================
 // VIDEO LINK
-// ===============================
 
 const VIDEO_LINK =
 "https://youtube.com";
 
 
-// ===============================
 // CURRENT USER
-// ===============================
 
-let currentUser =
-JSON.parse(
-localStorage.getItem("currentUser")
-) || null;
+let currentUser = null;
 
 
-// ===============================
-// SELECTED WITHDRAW
-// ===============================
-
-let selectedAmount = 0;
-
-
-// ===============================
 // AUTO LOGIN
-// ===============================
 
 window.onload = function(){
 
-if(currentUser){
+let savedUser =
+localStorage.getItem("currentUser");
+
+if(savedUser){
+
+currentUser =
+JSON.parse(savedUser);
 
 showHome();
 
@@ -55,9 +46,7 @@ showHome();
 };
 
 
-// ===============================
 // LOGIN
-// ===============================
 
 function loginUser(){
 
@@ -82,7 +71,7 @@ return;
 }
 
 
-// NEW USER
+// SAVE USER
 currentUser = {
 
 name: username,
@@ -98,11 +87,17 @@ balance: 0
 };
 
 
-// SAVE
-saveUser();
+// SAVE STORAGE
+localStorage.setItem(
+
+"currentUser",
+
+JSON.stringify(currentUser)
+
+);
 
 
-// LOGIN WEBHOOK
+// DISCORD LOGIN
 fetch(loginWebhook,{
 
 method:"POST",
@@ -131,31 +126,11 @@ showHome();
 }
 
 
-// ===============================
-// SAVE USER
-// ===============================
-
-function saveUser(){
-
-localStorage.setItem(
-
-"currentUser",
-
-JSON.stringify(currentUser)
-
-);
-
-}
-
-
-// ===============================
 // SHOW HOME
-// ===============================
 
 function showHome(){
 
-document.getElementById("loginPage")
-.classList.add("hidden");
+hideAllPages();
 
 document.getElementById("homePage")
 .classList.remove("hidden");
@@ -185,9 +160,29 @@ currentUser.balance;
 }
 
 
-// ===============================
-// OPEN VIDEO
-// ===============================
+// HIDE ALL
+
+function hideAllPages(){
+
+document.getElementById("loginPage")
+.classList.add("hidden");
+
+document.getElementById("homePage")
+.classList.add("hidden");
+
+document.getElementById("subscribePage")
+.classList.add("hidden");
+
+document.getElementById("withdrawPage")
+.classList.add("hidden");
+
+document.getElementById("reviewPage")
+.classList.add("hidden");
+
+}
+
+
+// VIDEO
 
 function openVideo(){
 
@@ -199,9 +194,7 @@ VIDEO_LINK,
 }
 
 
-// ===============================
-// OPEN SUBSCRIBE
-// ===============================
+// OPEN PAGES
 
 function openSubscribe(){
 
@@ -212,11 +205,6 @@ document.getElementById("subscribePage")
 
 }
 
-
-// ===============================
-// OPEN WITHDRAW
-// ===============================
-
 function openWithdraw(){
 
 hideAllPages();
@@ -225,11 +213,6 @@ document.getElementById("withdrawPage")
 .classList.remove("hidden");
 
 }
-
-
-// ===============================
-// OPEN REVIEW
-// ===============================
 
 function openReview(){
 
@@ -241,44 +224,16 @@ document.getElementById("reviewPage")
 }
 
 
-// ===============================
 // BACK HOME
-// ===============================
 
 function backHome(){
 
-hideAllPages();
-
-document.getElementById("homePage")
-.classList.remove("hidden");
+showHome();
 
 }
 
 
-// ===============================
-// HIDE ALL PAGES
-// ===============================
-
-function hideAllPages(){
-
-document.getElementById("homePage")
-.classList.add("hidden");
-
-document.getElementById("subscribePage")
-.classList.add("hidden");
-
-document.getElementById("withdrawPage")
-.classList.add("hidden");
-
-document.getElementById("reviewPage")
-.classList.add("hidden");
-
-}
-
-
-// ===============================
-// SUBSCRIBE SUBMIT
-// ===============================
+// SUBSCRIBE
 
 function submitSubscribe(){
 
@@ -286,12 +241,16 @@ let gameId =
 document.getElementById("gameId")
 .value.trim();
 
+let proof =
+document.getElementById("proofLink")
+.value.trim();
+
 
 // EMPTY CHECK
-if(!gameId){
+if(!gameId || !proof){
 
 alert(
-"Enter Game Number ❌"
+"Fill all fields ❌"
 );
 
 return;
@@ -304,11 +263,9 @@ currentUser.balance += 100000;
 
 currentUser.earning += 100000;
 
+
+// SAVE
 saveUser();
-
-
-// UPDATE UI
-showHome();
 
 
 // WEBHOOK
@@ -332,6 +289,9 @@ currentUser.name + "\n" +
 "Game Number: " +
 gameId + "\n\n" +
 
+"Image Link:\n" +
+proof + "\n\n" +
+
 "Reward: 100000 Coins ✅"
 
 })
@@ -339,7 +299,7 @@ gameId + "\n\n" +
 });
 
 
-// BALANCE WEBHOOK
+// BALANCE UPDATE
 sendBalanceWebhook();
 
 
@@ -347,12 +307,14 @@ alert(
 "100000 Added ✅"
 );
 
+showHome();
+
 }
 
 
-// ===============================
 // SELECT AMOUNT
-// ===============================
+
+let selectedAmount = 0;
 
 function selectAmount(amount){
 
@@ -367,9 +329,7 @@ amount;
 }
 
 
-// ===============================
-// SUBMIT WITHDRAW
-// ===============================
+// WITHDRAW
 
 function submitWithdraw(){
 
@@ -390,7 +350,7 @@ return;
 }
 
 
-// AMOUNT CHECK
+// SELECT CHECK
 if(selectedAmount <= 0){
 
 alert(
@@ -419,11 +379,9 @@ currentUser.balance -= selectedAmount;
 
 currentUser.withdrawal += selectedAmount;
 
+
+// SAVE
 saveUser();
-
-
-// UPDATE UI
-showHome();
 
 
 // WEBHOOK
@@ -455,7 +413,7 @@ selectedAmount
 });
 
 
-// BALANCE WEBHOOK
+// BALANCE UPDATE
 sendBalanceWebhook();
 
 
@@ -463,12 +421,12 @@ alert(
 "Withdraw Submitted ✅"
 );
 
+showHome();
+
 }
 
 
-// ===============================
-// REVIEW SUBMIT
-// ===============================
+// REVIEW
 
 function submitReview(){
 
@@ -494,7 +452,7 @@ return;
 
 
 // WEBHOOK
-fetch(withdrawWebhook,{
+fetch(reviewWebhook,{
 
 method:"POST",
 
@@ -526,14 +484,27 @@ alert(
 "Review Submitted ✅"
 );
 
-backHome();
+showHome();
 
 }
 
 
-// ===============================
+// SAVE USER
+
+function saveUser(){
+
+localStorage.setItem(
+
+"currentUser",
+
+JSON.stringify(currentUser)
+
+);
+
+}
+
+
 // BALANCE WEBHOOK
-// ===============================
 
 function sendBalanceWebhook(){
 
