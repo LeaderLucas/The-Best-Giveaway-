@@ -1,93 +1,389 @@
-body{
+*{
 
 margin:0;
 padding:0;
+box-sizing:border-box;
 
-background:#0f0f0f;
+}
 
-font-family:Arial;
+body{
+
+font-family:Arial, sans-serif;
+
+background:
+linear-gradient(
+135deg,
+#050816,
+#0d132b,
+#111827
+);
+
+min-height:100vh;
 
 display:flex;
 justify-content:center;
 align-items:center;
 
-height:100vh;
-
-}
-
-.card{
-
-width:320px;
-
-background:#111;
-
-padding:25px;
-
-border-radius:20px;
-
-box-shadow:0 0 25px #00ffcc;
-
-text-align:center;
+padding:20px;
 
 color:white;
 
 }
 
-h1{
 
-color:#00ffcc;
+/* MAIN CARD */
+
+.card{
+
+width:100%;
+max-width:380px;
+
+background:
+rgba(10,10,20,0.95);
+
+border-radius:28px;
+
+padding:28px;
+
+box-shadow:
+
+0 0 25px rgba(0,255,255,0.25),
+
+0 0 50px rgba(255,0,255,0.15);
+
+backdrop-filter:blur(10px);
+
+animation:fadeIn 0.4s ease;
 
 }
 
-input{
+
+/* TITLES */
+
+.title{
+
+font-size:38px;
+
+font-weight:bold;
+
+text-align:center;
+
+margin-bottom:25px;
+
+background:
+linear-gradient(
+90deg,
+#00f5ff,
+#00ff99,
+#ff00ff
+);
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+
+}
+
+.verifyTitle{
+
+font-size:34px;
+
+text-align:center;
+
+margin-bottom:25px;
+
+color:#00ffe0;
+
+}
+
+.withdrawTitle{
+
+font-size:34px;
+
+text-align:center;
+
+margin-bottom:25px;
+
+color:#ffb300;
+
+}
+
+.reviewTitle{
+
+font-size:34px;
+
+text-align:center;
+
+margin-bottom:25px;
+
+color:#ff4fd8;
+
+}
+
+
+/* INPUTS */
+
+input,
+textarea{
 
 width:100%;
 
-padding:12px;
+padding:16px;
 
-margin-top:12px;
+margin-top:14px;
 
 border:none;
 
-border-radius:10px;
-
 outline:none;
 
-font-size:16px;
+border-radius:16px;
 
-box-sizing:border-box;
+font-size:17px;
+
+background:#f2f2f2;
+
+color:#111;
+
+font-weight:bold;
 
 }
+
+textarea{
+
+height:120px;
+
+resize:none;
+
+}
+
+
+/* BUTTONS */
 
 button{
 
 width:100%;
 
-padding:12px;
+padding:16px;
 
-margin-top:15px;
+margin-top:18px;
 
 border:none;
 
-border-radius:10px;
+border-radius:18px;
 
-background:#00ffcc;
-
-color:black;
-
-font-size:16px;
+font-size:18px;
 
 font-weight:bold;
 
 cursor:pointer;
 
+transition:0.3s;
+
+color:white;
+
 }
+
+
+/* DIFFERENT BUTTON COLORS */
+
+.videoBtn{
+
+background:
+linear-gradient(
+90deg,
+#ff512f,
+#dd2476
+);
+
+}
+
+.verifyBtn{
+
+background:
+linear-gradient(
+90deg,
+#00c6ff,
+#0072ff
+);
+
+}
+
+.withdrawBtn{
+
+background:
+linear-gradient(
+90deg,
+#f7971e,
+#ffd200
+);
+
+color:black;
+
+}
+
+.reviewBtn{
+
+background:
+linear-gradient(
+90deg,
+#bc4e9c,
+#f80759
+);
+
+}
+
+.submitBtn{
+
+background:
+linear-gradient(
+90deg,
+#00ff99,
+#00ccff
+);
+
+color:black;
+
+}
+
+.backBtn{
+
+background:
+linear-gradient(
+90deg,
+#434343,
+#000000
+);
+
+}
+
+
+/* BUTTON HOVER */
 
 button:hover{
 
-opacity:0.8;
+transform:scale(1.03);
+
+opacity:0.92;
 
 }
+
+
+/* BALANCE BOX */
+
+.balanceBox{
+
+margin-top:20px;
+
+display:flex;
+flex-direction:column;
+gap:15px;
+
+}
+
+
+/* BALANCE ITEMS */
+
+.balanceItem{
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,0.08),
+rgba(255,255,255,0.03)
+);
+
+padding:18px;
+
+border-radius:20px;
+
+text-align:center;
+
+border:
+1px solid rgba(255,255,255,0.08);
+
+box-shadow:
+0 0 15px rgba(0,0,0,0.25);
+
+}
+
+
+/* BALANCE TITLE */
+
+.balanceItem h3{
+
+font-size:16px;
+
+margin-bottom:10px;
+
+color:#cfcfcf;
+
+}
+
+
+/* BALANCE VALUE */
+
+.balanceItem p{
+
+font-size:28px;
+
+font-weight:bold;
+
+color:#00ffae;
+
+}
+
+
+/* AMOUNT BUTTONS */
+
+.amountButtons{
+
+display:grid;
+
+grid-template-columns:
+1fr 1fr;
+
+gap:12px;
+
+margin-top:18px;
+
+}
+
+
+/* AMOUNT BUTTON */
+
+.amountButtons button{
+
+background:
+linear-gradient(
+90deg,
+#ff9966,
+#ff5e62
+);
+
+font-size:17px;
+
+padding:14px;
+
+}
+
+
+/* SELECTED AMOUNT */
+
+#selectedAmount{
+
+margin-top:18px;
+
+text-align:center;
+
+font-size:22px;
+
+font-weight:bold;
+
+color:#00ffcc;
+
+}
+
+
+/* HIDDEN */
 
 .hidden{
 
@@ -95,8 +391,71 @@ display:none;
 
 }
 
-p{
 
-font-size:18px;
+/* WELCOME TEXT */
+
+#welcomeText{
+
+text-align:center;
+
+font-size:24px;
+
+font-weight:bold;
+
+margin-top:10px;
+
+color:#ffffff;
+
+}
+
+
+/* ANIMATION */
+
+@keyframes fadeIn{
+
+from{
+
+opacity:0;
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+
+/* MOBILE */
+
+@media(max-width:480px){
+
+.card{
+
+padding:22px;
+
+}
+
+.title{
+
+font-size:32px;
+
+}
+
+button{
+
+font-size:16px;
+
+}
+
+.balanceItem p{
+
+font-size:24px;
+
+}
 
 }
