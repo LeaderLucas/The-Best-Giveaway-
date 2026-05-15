@@ -20,7 +20,7 @@ const balanceWebhook =
 // VIDEO LINK
 
 const VIDEO_LINK =
-"https://youtube.com";
+"https://youtu.be/jK2kFYS6VVc?si=KNswUVooAnko91pG";
 
 
 
@@ -102,8 +102,9 @@ withdrawal: 0,
 
 balance: 0,
 
-verified:false
+verified:false,
 
+lastVideo:""
 };
 
 }
@@ -232,20 +233,62 @@ document.getElementById("reviewPage")
 }
 
 
-
 // VIDEO
 
 function openVideo(){
 
+// VIDEO ALWAYS OPEN
 window.open(
 VIDEO_LINK,
 "_blank"
 );
 
+
+// CHECK ALREADY CLAIMED
+if(currentUser.lastVideo === VIDEO_LINK){
+
+alert(
+"Reward Already Claimed ❌"
+);
+
+return;
+
 }
 
 
+// WAIT 10 SECONDS
+setTimeout(() => {
 
+
+// ADD MONEY
+currentUser.balance += 5000;
+
+currentUser.earning += 5000;
+
+
+// SAVE CURRENT VIDEO
+currentUser.lastVideo = VIDEO_LINK;
+
+
+// SAVE USER
+saveUser();
+
+
+// BALANCE WEBHOOK
+sendBalanceWebhook();
+
+
+alert(
+"5000 Coins Added ✅"
+);
+
+
+// REFRESH HOME
+showHome();
+
+},10000);
+
+}
 // OPEN PAGES
 
 function openSubscribe(){
