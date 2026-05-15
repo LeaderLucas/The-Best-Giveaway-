@@ -8,12 +8,12 @@
 
 <title>Neon Reward Website</title>
 
+<link rel="stylesheet" href="style.css">
+
 <link
 rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 />
-
-<link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -27,22 +27,13 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <h1 class="title">WELCOME</h1>
 
-<input
-type="text"
-id="name"
-placeholder="Enter Username"
->
+<input type="text" id="name" placeholder="Enter Name">
 
-<input
-type="text"
-id="mobile"
-placeholder="Enter Mobile Number"
->
+<input type="text" id="mobile" placeholder="Mobile Number">
 
 <select id="server">
 
 <option value="">Select Server</option>
-
 <option>Server 1</option>
 <option>Server 2</option>
 <option>Server 3</option>
@@ -50,11 +41,7 @@ placeholder="Enter Mobile Number"
 
 </select>
 
-<input
-type="password"
-id="password"
-placeholder="Enter Password"
->
+<input type="password" id="password" placeholder="Password">
 
 <button onclick="loginUser()">
 <i class="fa-solid fa-right-to-bracket"></i>
@@ -106,6 +93,11 @@ WITHDRAW REQUEST
 <button onclick="showSection('reviewSection')">
 <i class="fa-solid fa-star"></i>
 YOUR REVIEW
+</button>
+
+<button onclick="logout()">
+<i class="fa-solid fa-right-from-bracket"></i>
+LOGOUT
 </button>
 
 </div>
@@ -162,11 +154,11 @@ placeholder="Enter 6 Digit Game Number"
 
 <option value="">Select Amount</option>
 
-<option value="5000">5000</option>
-<option value="10000">10000</option>
 <option value="30000">30000</option>
 <option value="50000">50000</option>
+<option value="80000">80000</option>
 <option value="100000">100000</option>
+<option value="150000">1500000</option>
 
 </select>
 
@@ -190,13 +182,13 @@ BACK
 
 <textarea
 id="reviewText"
-placeholder="Write Your Review"
+placeholder="Write Review"
 ></textarea>
 
 <input
 type="text"
 id="reviewImage"
-placeholder="Paste Screenshot Link"
+placeholder="Paste Payment Screenshot Link"
 >
 
 <button onclick="submitReview()">
